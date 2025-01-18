@@ -30,7 +30,8 @@ impl Modify for BearerAuthAddon {
     security(("bearer_auth" = [])),
     paths(
 
-        routes::health::health
+        routes::health::health,
+        routes::auth::signup::signup
 
     ),
     modifiers(&BearerAuthAddon),

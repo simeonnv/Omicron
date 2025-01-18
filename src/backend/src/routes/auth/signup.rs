@@ -1,9 +1,9 @@
-use std::error::Error;
 
 use actix_web::{post, web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use crate::{db::get_db_pool::get_db_pool, DB};
+use crate::auth::{check_if_account_exists::check_if_account_exists, create_account::create_account, create_token::create_token};
+use crate::error::Error;
 
 #[derive(Serialize, Deserialize)]
 pub struct Req {
@@ -15,7 +15,7 @@ pub struct Req {
 #[derive(Serialize, Deserialize)]
 struct Res<'a> {
     status: &'a str,
-    token: String
+    data: Option<String>
 }
 
 #[utoipa::path(
@@ -40,28 +40,37 @@ struct Res<'a> {
     tag = "Auth"
 )]
 #[post("/signup")]
-pub async fn signup(data: web::Json<Req>) -> Result<HttpResponse, Box<dyn Error>> {
+pub async fn signup(data: web::Json<Req>) -> Result<HttpResponse, Error> {
 
     if data.username.len() > 15 || data.username.len() < 3 || data.password.len() > 30 || data.password.len() < 3 {
         return Ok(HttpResponse::Unauthorized().json(Res {
             status: "incorrect credentials",
-            token: "".to_string(),
+            data: None,
         }));
     }
-
-    let pool = get_db_pool();
-
     
+    if check_if_account_exists(&data.username).await? {
+        return Ok(HttpResponse::Conflict().json(Res {
+            status: "account already exists",
+            data: None,
+        }))
+    }
+
+    let account: (String, i64) = create_account(&data.username, &data.password, "user").await?;
 
 
+    let token: String = create_token(&account.1, "user").await?;
 
+    dbg!(&token);
+    dbg!(&account);
 
     return Ok(HttpResponse::Ok().json(Res {
         status: "success",
-        token: "".to_string(),
+        data: Some(token),
     }));
    
 }
+
 
 #[derive(Serialize, Deserialize, ToSchema)]
 #[schema(title = "Signup Request")]

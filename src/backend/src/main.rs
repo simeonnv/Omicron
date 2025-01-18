@@ -11,6 +11,9 @@ pub mod config;
 pub mod db;
 pub mod routes;
 pub mod crypto;
+pub mod auth;
+pub mod structs;
+pub mod error;
 
 static DB: OnceCell<Pool<MySql>> = OnceCell::const_new();
 

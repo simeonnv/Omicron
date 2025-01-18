@@ -1,21 +1,21 @@
 pub const QUERIES: [&str; 2] = [
     r#"
         CREATE TABLE IF NOT EXISTS Accounts (
-            AccountID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-            Username VARCHAR(20) NOT NULL,
-            Password VARCHAR(255) NOT NULL,
-            Role VARCHAR(20) NOT NULL,
-            CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+            account_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+            username VARCHAR(20) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            role VARCHAR(20) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
     "#,
     r#"
         CREATE TABLE IF NOT EXISTS Tokens (
-            TokenID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-            UserID INT NOT NULL,
-            Token VARCHAR(255) NOT NULL,
-            Role VARCHAR(20) NOT NULL,
-            CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (UserID) REFERENCES Accounts(AccountID) ON DELETE CASCADE
+            token_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+            user_id INT NOT NULL,
+            token VARCHAR(255) NOT NULL UNIQUE,
+            role VARCHAR(20) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
         );
     "#,
 ];
