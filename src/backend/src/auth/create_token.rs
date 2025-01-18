@@ -17,13 +17,6 @@ pub async fn create_token(account_id: &i64, role: &'static str) -> Result<String
 
     dbg!(&token);
 
-    let hashed_token: String = match crypto::hash::hash(&token).await {
-        Ok(res) => res,
-        Err(e) => {
-            return Err(Error(format!("hash error: {}", e)))
-        }
-    };
-
     let db_res = sqlx::query(r#"
         
         INSERT INTO Tokens 
@@ -33,7 +26,7 @@ pub async fn create_token(account_id: &i64, role: &'static str) -> Result<String
 
     "#)
         .bind(role)
-        .bind(hashed_token)
+        .bind(&token)
         .bind(account_id)
         .fetch_one(pool)
         .await;
