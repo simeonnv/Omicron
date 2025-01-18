@@ -1,3 +1,5 @@
+use chrono::NaiveDateTime;
+use sqlx::types::chrono;
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct Accounts {
@@ -5,5 +7,5 @@ pub struct Accounts {
     pub username: String,
     pub password: String,
     pub role: String,
-    pub created_at: String
+    pub created_at: NaiveDateTime
 }

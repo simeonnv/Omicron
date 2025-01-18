@@ -36,6 +36,6 @@ impl From<sqlx::Error> for Error {
 
 impl From<password_hash::Error> for Error {
     fn from(err: password_hash::Error) -> Self {
-        Error(format!("Password hash error: {}", err))
+        Error(format!("Crypto hash error: {}", err))
     }
 }

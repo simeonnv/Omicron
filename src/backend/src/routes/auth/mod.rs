@@ -8,6 +8,6 @@ pub mod login;
 pub fn auth() -> Scope {
     web::scope("/auth")
         .service(signup::signup)
-        // .service(login::login)
+        .service(login::login)
 
 }

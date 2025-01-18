@@ -31,7 +31,9 @@ impl Modify for BearerAuthAddon {
     paths(
 
         routes::health::health,
-        routes::auth::signup::signup
+
+        routes::auth::signup::signup,
+        routes::auth::login::login
 
     ),
     modifiers(&BearerAuthAddon),

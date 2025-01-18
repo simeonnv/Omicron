@@ -21,17 +21,17 @@ struct Res<'a> {
 #[utoipa::path(
     post,
     path = "/auth/signup",
-    request_body = AuthSignupDocReq,
+    request_body = PostAuthSignupDocReq,
     responses(
-        (status = 200, description = "Signup successful", body = AuthSignupDocsRes, example = json!({
+        (status = 200, description = "Signup successful", body = PostAuthSignupDocsRes, example = json!({
             "status": "success",
             "token": "abc123xyz456"
         })),
-        (status = 401, description = "Unauthorized", body = AuthSignupDocsRes, example = json!({
+        (status = 401, description = "Unauthorized", body = PostAuthSignupDocsRes, example = json!({
             "status": "incorrect credential",
             "token": ""
         })),
-        (status = 409, description = "Conflict", body = AuthSignupDocsRes, example = json!({
+        (status = 409, description = "Conflict", body = PostAuthSignupDocsRes, example = json!({
             "status": "account already exists",
             "token": ""
         }))
@@ -74,14 +74,14 @@ pub async fn signup(data: web::Json<Req>) -> Result<HttpResponse, Error> {
 
 #[derive(Serialize, Deserialize, ToSchema)]
 #[schema(title = "Signup Request")]
-pub struct AuthSignupDocReq {
+pub struct PostAuthSignupDocReq {
     pub username: String,
     pub password: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, ToSchema)]
 #[schema(title = "Signup Response")]
-struct AuthSignupDocsRes {
+struct PostAuthSignupDocsRes {
     status: String,
     token: String
 }
