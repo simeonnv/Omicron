@@ -3,7 +3,10 @@ use once_cell::sync::Lazy;
 use actix_web::{middleware::Logger, App, HttpServer};
 use env_logger::Env;
 use sqlx::{MySql, Pool};
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
+pub mod api_docs;
 pub mod config;
 pub mod db;
 pub mod routes;
@@ -28,7 +31,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a %{User-Agent}i"))
 
             .service(routes::health::health)
-            
+            .service(SwaggerUi::new("/{_:.*}").url("/api-docs/openapi.json", api_docs::ApiDoc::openapi()))
     })
     .bind((config::LISTENING_ON, config::PORT))?
     .run()
