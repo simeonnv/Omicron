@@ -10,6 +10,7 @@ pub mod api_docs;
 pub mod config;
 pub mod db;
 pub mod routes;
+pub mod crypto;
 
 static DB: Lazy<Pool<MySql>> = Lazy::new(|| {
     tokio::runtime::Builder::new_multi_thread()
