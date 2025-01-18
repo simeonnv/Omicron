@@ -1,4 +1,4 @@
-use once_cell::sync::Lazy;
+use tokio::sync::OnceCell;
 
 use actix_web::{middleware::Logger, App, HttpServer};
 use env_logger::Env;
@@ -12,19 +12,15 @@ pub mod db;
 pub mod routes;
 pub mod crypto;
 
-static DB: Lazy<Pool<MySql>> = Lazy::new(|| {
-    tokio::runtime::Builder::new_multi_thread()
-        .enable_all()
-        .build()
-        .unwrap()
-        .block_on(db::init_db::init_db())
-        .expect("Failed to initialize the database")
-});
+static DB: OnceCell<Pool<MySql>> = OnceCell::const_new();
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
     env_logger::init_from_env(Env::default().default_filter_or("info"));
+
+    db::init_pool::init_pool().await.expect("Failed to initialize database");
+    db::init_tables::init_tables().await.expect("Failed to initialize tables");
 
     HttpServer::new(|| {
         App::new()
@@ -32,6 +28,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a %{User-Agent}i"))
 
             .service(routes::health::health)
+            .service(routes::auth::auth())
             .service(SwaggerUi::new("/{_:.*}").url("/api-docs/openapi.json", api_docs::ApiDoc::openapi()))
     })
     .bind((config::LISTENING_ON, config::PORT))?
