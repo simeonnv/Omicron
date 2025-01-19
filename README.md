@@ -1,12 +1,21 @@
 # Omicron
  Chatroom written in rust
 
+## Compilation and exacution
 
+To run tests, run the following command
 
+### Backend
+```bash
+  cargo run
+```
 
+### Frontend
 compiling tailwind
-```npx tailwindcss -i ./styles/input.css -o ./styles/output.css --watch```
+```bash
+  npx tailwindcss -i ./styles/input.css -o ./styles/output.css --watch
+```
 compiling frontend
-```trunk serve```
-compiling backend
-```cargo build```
+```bash
+  trunk serve
+```
