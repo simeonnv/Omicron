@@ -66,6 +66,14 @@ where
 pub struct AuthMiddlewareService<S> {
     service: Rc<S>,
 }
+#[derive(sqlx::FromRow, Debug)]
+pub struct AccountData {
+    token: String,
+    role: String,
+    token_creation_date: NaiveDateTime,
+    username: String,
+    account_creation_date: NaiveDateTime,
+}
 
 impl<S, B> Service<ServiceRequest> for AuthMiddlewareService<S>
 where
@@ -94,28 +102,25 @@ where
                     let token = String::from(&auth_header["Bearer ".len()..]);
                     let pool = get_db_pool();
 
-                    #[derive(sqlx::FromRow)]
-                    
-                    struct AccountData {
-                        token: String,
-                        role: String,
-                        token_creation_date: NaiveDateTime,
-                        username: String,
-                        account_creation_date: NaiveDateTime,
-                    }
-
                     let db_res: Option<AccountData> = sqlx::query_as(r#"
-                        SELECT 
-                            Tokens.token, Tokens.role, Tokens.created_at AS token_creation_date,
-                            Accounts.username, Accounts.created_at AS account_creation_date
-                        FROM Tokens
-                        INNER JOIN Accounts ON Tokens.token_id = Accounts.account_id
+                        SELECT
+                            Tokens.token,
+                            Tokens.role,
+                            Tokens.created_at AS token_creation_date,
+                            Accounts.username,
+                            Accounts.created_at AS account_creation_date
+                        FROM
+                            Tokens
+                        INNER JOIN Accounts ON
+                            Tokens.user_id = Accounts.account_id
                         WHERE token = ?;
                     "#)
                         .bind(token)
                         .fetch_optional(pool)
                         .await
                         .map_err(AuthError::from)?; // Use custom error conversion
+
+                    dbg!(&db_res);
 
                     let account_data = db_res.ok_or_else(|| AuthError("Token has expired!".to_string()))?;
 

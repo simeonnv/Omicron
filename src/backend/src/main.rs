@@ -30,8 +30,9 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
 
-            .service(routes::health::health)
+            .service(routes::debug::health::health)
             .service(routes::auth::auth())
+            .service(routes::debug::auth_me())
             .service(SwaggerUi::new("/{_:.*}").url("/api-docs/openapi.json", api_docs::ApiDoc::openapi()))
     })
     .bind((config::LISTENING_ON, config::PORT))?
