@@ -11,31 +11,44 @@ pub struct ErrorRes {
 }
 
 #[derive(Debug)]
-pub struct Error(pub String);
+pub enum Error {
+    BadRequest(String),
+    Internal(String),
+}
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.0)
+        match self {
+            Error::BadRequest(msg) => write!(f, "Bad request: {}", msg),
+            Error::Internal(msg) => write!(f, "Internal error: {}", msg),
+        }
     }
 }
 
 impl ResponseError for Error {
     fn error_response(&self) -> HttpResponse {
-        HttpResponse::InternalServerError().json(ErrorRes {
-            status: format!("server skillissue: {}", self.0),
-            data: "",
-        })
+        match self {
+            Error::BadRequest(msg) => HttpResponse::BadRequest().json(ErrorRes {
+                status: msg.to_string(),
+                data: ""
+            }),
+            Error::Internal(msg) => HttpResponse::InternalServerError().json(ErrorRes {
+                status: format!("server skillissue: {}", msg),
+                data: "",
+            }),
+        }
     }
 }
 
 impl From<sqlx::Error> for Error {
     fn from(err: sqlx::Error) -> Self {
-        Error(format!("Database error: {}", err))
+        Error::Internal(format!("Database error: {}", err))
     }
 }
 
 impl From<password_hash::Error> for Error {
     fn from(err: password_hash::Error) -> Self {
-        Error(format!("Crypto hash error: {}", err))
+        Error::Internal(format!("Crypto hash error: {}", err))
     }
 }
+

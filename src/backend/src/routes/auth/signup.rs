@@ -2,7 +2,8 @@
 use actix_web::{post, web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use crate::auth::{check_if_account_exists::check_if_account_exists, create_account::create_account, create_token::create_token};
+use crate::libs::auth::insure_string_size::insure_string_size;
+use crate::libs::auth::{check_if_account_exists::check_if_account_exists, create_account::create_account, create_token::create_token};
 use crate::error::Error;
 
 #[derive(Serialize, Deserialize)]
@@ -40,23 +41,19 @@ struct Res<'a> {
     tag = "Auth"
 )]
 #[post("/signup")]
-pub async fn signup(data: web::Json<Req>) -> Result<HttpResponse, Error> {
+pub async fn signup(req: web::Json<Req>) -> Result<HttpResponse, Error> {
 
-    if data.username.len() > 15 || data.username.len() < 3 || data.password.len() > 30 || data.password.len() < 3 {
-        return Ok(HttpResponse::Unauthorized().json(Res {
-            status: "incorrect credentials",
-            data: None,
-        }));
-    }
+    insure_string_size(&req.username, 3, 15)?;
+    insure_string_size(&req.password, 3, 30)?;
     
-    if check_if_account_exists(&data.username).await? {
+    if check_if_account_exists(&req.username).await? {
         return Ok(HttpResponse::Conflict().json(Res {
             status: "account already exists",
             data: None,
         }))
     }
 
-    let account: (String, i64) = create_account(&data.username, &data.password, "user").await?;
+    let account: (String, i64) = create_account(&req.username, &req.password, "user", false).await?;
 
 
     let token: String = create_token(&account.1, "user").await?;

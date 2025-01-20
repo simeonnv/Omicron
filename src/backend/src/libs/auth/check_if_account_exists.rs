@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::db::get_db_pool::get_db_pool;
+use crate::libs::db::get_db_pool::get_db_pool;
 use crate::error::Error;
 
 

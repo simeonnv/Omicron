@@ -1,7 +1,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::{crypto::{self}, db::get_db_pool::get_db_pool, error::Error};
+use crate::{libs::crypto::{self}, libs::db::get_db_pool::get_db_pool, error::Error};
 
 #[derive(Serialize, Deserialize)]
 struct Res {
@@ -34,7 +34,7 @@ pub async fn create_token(account_id: &i64, role: &'static str) -> Result<String
     match db_res {
         Ok(_) => { return Ok(token) },
         Err(e) => {
-            return Err(Error(format!("database: {}", e)))
+            return Err(Error::Internal(format!("database: {}", e)))
         }
     };
 }

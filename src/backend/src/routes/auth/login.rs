@@ -2,9 +2,10 @@
 use actix_web::{post, web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use crate::auth::check_credentials::check_credentials;
-use crate::auth::create_token::create_token;
+use crate::libs::auth::check_credentials::check_credentials;
+use crate::libs::auth::create_token::create_token;
 use crate::error::Error;
+use crate::libs::auth::insure_string_size::insure_string_size;
 
 #[derive(Serialize, Deserialize)]
 pub struct Req {
@@ -41,15 +42,12 @@ struct Res<'a> {
     tag = "Auth"
 )]
 #[post("/login")]
-pub async fn login(data: web::Json<Req>) -> Result<HttpResponse, Error> {
+pub async fn login(req: web::Json<Req>) -> Result<HttpResponse, Error> {
 
-    if data.username.len() > 15 || data.username.len() < 3 || data.password.len() > 30 || data.password.len() < 3 {
-        return Ok(HttpResponse::Unauthorized().json(Res {
-            status: "incorrect credentials",
-            data: None,
-        }));
-    }
-    let account = check_credentials(&data.username, &data.password).await?;
+    insure_string_size(&req.username, 3, 15)?;
+    insure_string_size(&req.password, 3, 30)?;
+
+    let account = check_credentials(&req.username, &req.password).await?;
     if !account.0 {
         return Ok(HttpResponse::Conflict().json(Res {
             status: "incorrect credentials",

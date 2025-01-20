@@ -10,7 +10,7 @@ use std::future::{ready, Ready};
 use std::rc::Rc;
 use std::fmt;
 
-use crate::db::get_db_pool::get_db_pool;
+use crate::libs::db::get_db_pool::get_db_pool;
 
 #[derive(Debug)]
 pub struct AuthError(pub String);
@@ -67,12 +67,13 @@ pub struct AuthMiddlewareService<S> {
     service: Rc<S>,
 }
 #[derive(sqlx::FromRow, Debug)]
+#[allow(dead_code)]
 pub struct AccountData {
-    token: String,
-    role: String,
-    token_creation_date: NaiveDateTime,
-    username: String,
-    account_creation_date: NaiveDateTime,
+    pub token: String,
+    pub role: String,
+    pub token_creation_date: NaiveDateTime,
+    pub username: String,
+    pub account_creation_date: NaiveDateTime,
 }
 
 impl<S, B> Service<ServiceRequest> for AuthMiddlewareService<S>

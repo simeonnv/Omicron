@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-use crate::crypto;
-use crate::db::get_db_pool::get_db_pool;
+use crate::libs::crypto;
+use crate::libs::db::get_db_pool::get_db_pool;
 use crate::error::Error;
 use crate::structs::accounts;
 

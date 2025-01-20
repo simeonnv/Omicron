@@ -1,4 +1,4 @@
-use crate::{config, db::{get_db_pool::get_db_pool, queries}};
+use crate::{config, libs::db::{get_db_pool::get_db_pool, queries}};
 
 
 pub async fn init_tables() -> Result<(), sqlx::Error> {
