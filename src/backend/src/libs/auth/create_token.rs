@@ -9,7 +9,7 @@ struct Res {
     data: &'static str
 }
 
-pub async fn create_token(account_id: &i64, role: &'static str) -> Result<String, Error> {
+pub async fn create_token(account_id: &i64, role: String) -> Result<String, Error> {
 
     let pool = get_db_pool();
 

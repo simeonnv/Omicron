@@ -4,7 +4,7 @@ use sqlx::types::chrono;
 #[derive(sqlx::FromRow, Debug)]
 pub struct Accounts {
     pub account_id: i64,
-    pub pfp: i64,
+    pub pfp: Option<i64>,
     pub username: String,
     pub password: String,
     pub role: String,

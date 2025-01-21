@@ -55,7 +55,7 @@ pub async fn login(req: web::Json<Req>) -> Result<HttpResponse, Error> {
         }))
     }
 
-    let token: String = create_token(&account.1, "user").await?;
+    let token: String = create_token(&account.1, account.2).await?;
 
     dbg!(&token);
 

@@ -56,16 +56,12 @@ async fn post_subicron(token_data: HttpRequest, req: web::Json<Req>) -> Result<H
 
         insure_string_size(&req.name, 3, 15)?;
 
-        let subicron_data = create_subicron(&req.name, req.image_id).await?;
-        
-        dbg!(&subicron_data);
+        create_subicron(&req.name, req.image_id).await?;
 
         return Ok(HttpResponse::Ok().json(Res {
             status: "Success",
             data: "",
         }))
-
-
 
     } else {
         return Ok(HttpResponse::Unauthorized().json(Res {

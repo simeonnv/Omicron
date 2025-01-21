@@ -56,7 +56,7 @@ pub async fn signup(req: web::Json<Req>) -> Result<HttpResponse, Error> {
     let account: (String, i64) = create_account(&req.username, &req.password, "user", false).await?;
 
 
-    let token: String = create_token(&account.1, "user").await?;
+    let token: String = create_token(&account.1, "user".to_string()).await?;
 
     dbg!(&token);
     dbg!(&account);

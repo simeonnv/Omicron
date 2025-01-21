@@ -9,23 +9,23 @@ pub struct SubicronCreationRes {
     pub subicron_id: i64
 }
 
-pub async fn create_subicron(name: &String, image_id: Option<i64>) -> Result<SubicronCreationRes, Error> {
+pub async fn create_subicron(name: &String, image_id: Option<i64>) -> Result<(), Error> {
 
     let pool = get_db_pool();
 
-    let group: SubicronCreationRes = sqlx::query_as(r#"
+    sqlx::query(r#"
         
         INSERT INTO Subicron
             (image_id, name)
             VALUES(?, ?)
-        RETURNING created_at, subicron_id;
+        RETURNING created_at;
         
 
     "#)
-        .bind(name)
         .bind(image_id)
-        .fetch_one(pool)
+        .bind(name)
+        .execute(pool)
         .await?;
     
-    Ok(group)
+    Ok(())
 }

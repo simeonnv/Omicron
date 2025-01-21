@@ -13,7 +13,7 @@ struct Res {
 }
 
 
-pub async fn check_credentials(username: &String, password: &String) -> Result<(bool, i64), Error> {
+pub async fn check_credentials(username: &String, password: &String) -> Result<(bool, i64, String), Error> {
 
     let pool = get_db_pool();
 
@@ -28,10 +28,10 @@ pub async fn check_credentials(username: &String, password: &String) -> Result<(
 
     let account = match db_res {
         Some(value) => value,
-        None => return Ok((false, 0)),
+        None => return Ok((false, 0, "user".to_string())),
     };
 
     crypto::compare::compare(password, &account.password).await?;
     
-    Ok((crypto::compare::compare(password, &account.password).await?, account.account_id))
+    Ok((crypto::compare::compare(password, &account.password).await?, account.account_id, account.role))
 }
