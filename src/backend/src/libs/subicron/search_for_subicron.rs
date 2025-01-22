@@ -7,7 +7,8 @@ use crate::error::Error;
 pub struct SubicronSearchRes {
     pub image_id: Option<i64>,
     pub name: String,
-    pub created_at: NaiveDateTime
+    pub created_at: NaiveDateTime,
+    pub subicron_id: i64
 }
 
 pub async fn search_for_subicron(name: &String) -> Result<Vec<SubicronSearchRes>, Error> {
@@ -18,7 +19,7 @@ pub async fn search_for_subicron(name: &String) -> Result<Vec<SubicronSearchRes>
 
     let subicrons: Vec<SubicronSearchRes> = sqlx::query_as(r#"
 
-        SELECT image_id, name, created_at
+        SELECT image_id, name, created_at, subicron_id
         FROM Subicron
         WHERE name LIKE ?
         ORDER BY created_at DESC

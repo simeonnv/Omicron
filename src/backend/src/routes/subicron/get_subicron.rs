@@ -39,17 +39,20 @@ struct QueryParams {
                 {
                     "image_id": "14",
                     "name": "leg photos",
-                    "created_at": "DATE"
+                    "created_at": "DATE",
+                    "subicron_id": 2
                 },
                 {
                     "image_id": "11",
                     "name": "armpit photos",
-                    "created_at": "DATE"
+                    "created_at": "DATE",
+                    "subicron_id": 4
                 },
                 {
                     "image_id": "142",
                     "name": "nudes",
-                    "created_at": "DATE"
+                    "created_at": "DATE",
+                    "subicron_id": 3
                 }
             ]
         })),
@@ -104,4 +107,5 @@ pub struct SubicronSearchResDocs {
     pub name: String,
     #[schema(example = "2025-01-22T15:04:05")]
     pub created_at: String,
+    pub subicron_id: i64
 }
