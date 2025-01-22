@@ -35,7 +35,9 @@ pub const QUERIES: [&str; 5] = [
             image_id INT,
             name VARCHAR(20) NOT NULL UNIQUE,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (image_id) REFERENCES Files(file_id)
+            FOREIGN KEY (image_id) REFERENCES Files(file_id),
+            
+            INDEX (name)
         ) ENGINE=InnoDB;
     "#,
     r#"
@@ -52,7 +54,10 @@ pub const QUERIES: [&str; 5] = [
             
             FOREIGN KEY (embed_id) REFERENCES Files(file_id),
             FOREIGN KEY (poster) REFERENCES Accounts(account_id) ON DELETE CASCADE,
-            FOREIGN KEY (subicron) REFERENCES Subicron(subicron_id) ON DELETE CASCADE
+            FOREIGN KEY (subicron) REFERENCES Subicron(subicron_id) ON DELETE CASCADE,
+
+            INDEX (header),
+            INDEX (body)
         ) ENGINE=InnoDB;
     "#
 ];

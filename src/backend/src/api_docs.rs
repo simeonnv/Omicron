@@ -36,7 +36,8 @@ impl Modify for BearerAuthAddon {
         routes::auth::signup::signup,
         routes::auth::login::login,
 
-        routes::subicron::post_subicron::post_subicron
+        routes::subicron::post_subicron::post_subicron,
+        routes::subicron::get_subicron::get_subicron
 
     ),
     modifiers(&BearerAuthAddon),
