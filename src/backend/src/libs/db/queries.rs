@@ -45,7 +45,6 @@ pub const QUERIES: [&str; 5] = [
             post_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
             header VARCHAR(20) NOT NULL,
             body VARCHAR(510) NOT NULL,
-            has_embed BOOL NOT NULL,
             embed_id INT,
             poster INT NOT NULL,
             subicron INT NOT NULL,
