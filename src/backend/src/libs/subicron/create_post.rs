@@ -15,7 +15,7 @@ pub async fn create_post(header: &String, body: &String, embed: Option<i64>, pos
 
     sqlx::query(r#"
         
-        INSERT INTO Omicro
+        INSERT INTO Posts
         (header, body, embed_id, poster, subicron)
         VALUES(?, ?, ?, ?, ?);
         

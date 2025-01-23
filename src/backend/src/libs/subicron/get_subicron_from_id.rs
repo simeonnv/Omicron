@@ -10,7 +10,7 @@ pub async fn get_subicron_from_id(id: &String) -> Result<Option<SubicronSearchRe
     let subicrons: Option<SubicronSearchRes> = sqlx::query_as(r#"
 
         SELECT image_id, name, created_at, subicron_id
-        FROM Subicron
+        FROM Subicrons
         WHERE subicron_id = ?;
 
     "#)

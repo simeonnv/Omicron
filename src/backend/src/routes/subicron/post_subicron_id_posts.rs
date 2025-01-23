@@ -28,17 +28,20 @@ pub struct Req {
 #[utoipa::path(
     post,
     path = "/subicron/{subicron_id}/posts",
-    request_body = PostSubicronReqDocs,
+    request_body = PostSubicronIdPostsReqDocs,
+    params(
+        ("subicron_id" = String, Path, description = "Unique subicron ID")
+    ),
     responses(
-        (status = 200, description = "Signup successful", body = PostSubicronResDocs, example = json!({
+        (status = 200, description = "Signup successful", body = PostSubicronIdPostsResDocs, example = json!({
             "status": "success",
             "data": ""
         })),
-        (status = 401, description = "Unauthorized", body = PostSubicronResDocs, example = json!({
+        (status = 401, description = "Unauthorized", body = PostSubicronIdPostsResDocs, example = json!({
             "status": "Invalid premisions",
             "data": ""
         })),
-        (status = 400, description = "Bad Request", body = PostSubicronResDocs, example = json!({
+        (status = 400, description = "Bad Request", body = PostSubicronIdPostsResDocs, example = json!({
             "status": "Bad request data",
             "data": ""
         }))
@@ -81,14 +84,15 @@ async fn post_subicron_id_posts(token_data: HttpRequest, req: web::Json<Req>, pa
 
 
 #[derive(Serialize, Deserialize, ToSchema)]
-struct PostSubicronResDocs {
+struct PostSubicronIdPostsResDocs {
     status: &'static str,
     data: &'static str
 }
 
 
 #[derive(Serialize, Deserialize, ToSchema)]
-pub struct PostSubicronReqDocs {
-    pub name: String,
-    pub image_id: Option<i64>,
+pub struct PostSubicronIdPostsReqDocs {
+    pub header: String,
+    pub body: String,
+    pub embed: Option<i64> 
 }

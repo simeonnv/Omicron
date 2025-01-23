@@ -15,7 +15,7 @@ pub async fn create_subicron(name: &String, image_id: Option<i64>) -> Result<(),
 
     sqlx::query(r#"
         
-        INSERT INTO Subicron
+        INSERT INTO Subicrons
             (image_id, name)
             VALUES(?, ?)
         RETURNING created_at;

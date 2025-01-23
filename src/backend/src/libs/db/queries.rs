@@ -30,7 +30,7 @@ pub const QUERIES: [&str; 5] = [
         ) ENGINE=InnoDB;
     "#,
     r#"
-        CREATE TABLE IF NOT EXISTS Subicron (
+        CREATE TABLE IF NOT EXISTS Subicrons (
             subicron_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
             image_id INT,
             name VARCHAR(20) NOT NULL UNIQUE,
@@ -41,7 +41,7 @@ pub const QUERIES: [&str; 5] = [
         ) ENGINE=InnoDB;
     "#,
     r#"
-        CREATE TABLE IF NOT EXISTS Post (
+        CREATE TABLE IF NOT EXISTS Posts (
             post_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
             header VARCHAR(20) NOT NULL,
             body VARCHAR(510) NOT NULL,
@@ -53,7 +53,7 @@ pub const QUERIES: [&str; 5] = [
             
             FOREIGN KEY (embed_id) REFERENCES Files(file_id),
             FOREIGN KEY (poster) REFERENCES Accounts(account_id) ON DELETE CASCADE,
-            FOREIGN KEY (subicron) REFERENCES Subicron(subicron_id) ON DELETE CASCADE,
+            FOREIGN KEY (subicron) REFERENCES Subicrons(subicron_id) ON DELETE CASCADE,
 
             INDEX (header),
             INDEX (body)

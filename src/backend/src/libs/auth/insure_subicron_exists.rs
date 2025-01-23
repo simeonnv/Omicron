@@ -11,7 +11,7 @@ pub async fn insure_subicron_exists(subicron_id: i64) -> Result<(), Error> {
     let pool = get_db_pool();
 
     let subicron_exists: Subicron = sqlx::query_as(r#"
-        SELECT COUNT(*) FROM Subicron
+        SELECT COUNT(*) AS count FROM Subicrons
             WHERE subicron_id = ?
         ;
         "#)

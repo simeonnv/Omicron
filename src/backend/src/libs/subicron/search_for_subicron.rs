@@ -20,7 +20,7 @@ pub async fn search_for_subicron(name: &String) -> Result<Vec<SubicronSearchRes>
     let subicrons: Vec<SubicronSearchRes> = sqlx::query_as(r#"
 
         SELECT image_id, name, created_at, subicron_id
-        FROM Subicron
+        FROM Subicrons
         WHERE name LIKE ?
         ORDER BY created_at DESC
         LIMIT 10;
