@@ -69,6 +69,7 @@ pub struct AuthMiddlewareService<S> {
 #[derive(sqlx::FromRow, Debug)]
 #[allow(dead_code)]
 pub struct AccountData {
+    pub id: i64,
     pub token: String,
     pub role: String,
     pub token_creation_date: NaiveDateTime,
@@ -109,6 +110,7 @@ where
                             Tokens.role,
                             Tokens.created_at AS token_creation_date,
                             Accounts.username,
+                            Accounts.account_id AS id,
                             Accounts.created_at AS account_creation_date
                         FROM
                             Tokens

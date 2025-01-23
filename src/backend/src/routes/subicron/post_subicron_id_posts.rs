@@ -4,6 +4,10 @@ use utoipa::ToSchema;
 
 use crate::error::Error;
 use crate::libs::auth::auth_middleware::AccountData;
+use crate::libs::auth::insure_file_exists::insure_file_exists;
+use crate::libs::auth::insure_string_size::insure_string_size;
+use crate::libs::auth::insure_subicron_exists::insure_subicron_exists;
+use crate::libs::subicron::create_post::create_post;
 
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -45,10 +49,22 @@ pub struct Req {
     tag = "Subicron"
 )]
 #[post("/{subicron_id}/posts")]
-async fn post_subicron_id_posts(token_data: HttpRequest, req: web::Json<Req>) -> Result<HttpResponse, Error> {
+async fn post_subicron_id_posts(token_data: HttpRequest, req: web::Json<Req>, path: web::Path<String>) -> Result<HttpResponse, Error> {
     if let Some(account_info) = token_data.extensions().get::<AccountData>() {
 
+        let subicron_id = path.parse::<i64>().map_err(|_| {
+            Error::BadRequest(format!("invalid subicron id: {}", path))
+        })?;
         
+        // insure everything is up to the hespotos hermanus standarts
+        insure_string_size(&req.header, 5, 20)?;
+        insure_string_size(&req.body, 5, 510)?;
+        insure_subicron_exists(subicron_id).await?;
+        if !req.embed.is_none() {
+            insure_file_exists(req.embed.unwrap_or(1)).await?;
+        }
+
+        create_post(&req.header, &req.body, req.embed, account_info.id, subicron_id).await?;
 
         return Ok(HttpResponse::Ok().json(Res {
             status: "Success",
