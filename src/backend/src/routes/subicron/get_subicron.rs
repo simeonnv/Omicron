@@ -13,13 +13,6 @@ struct Res {
     data: Option<Vec<SubicronSearchRes>>
 }
 
-
-#[derive(Serialize, Deserialize)]
-pub struct Req {
-    pub name: String,
-    pub image_id: Option<i64>,
-}
-
 #[derive(Deserialize, ToSchema, IntoParams)]
 struct QueryParams {
     pub search: Option<String>, // Optional query parameter
