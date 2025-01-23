@@ -17,4 +17,5 @@ pub fn subicron() -> Scope<impl ServiceFactory<ServiceRequest, Config = (), Resp
         .service(get_subicron_id::get_subicron_id)
         .service(post_subicron_id_posts::post_subicron_id_posts)
         .service(get_subicron_id_posts::get_subicron_id_posts)
+        .service(get_subicron_id_posts_id::get_subicron_id_posts_id)
 }

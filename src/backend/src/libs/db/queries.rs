@@ -11,12 +11,12 @@ pub const QUERIES: [&str; 6] = [
     r#"
         CREATE TABLE IF NOT EXISTS Accounts (
             account_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-            pfp INT DEFAULT NULL,
+            pfp_id INT DEFAULT NULL,
             username VARCHAR(20) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
             role VARCHAR(20) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (pfp) REFERENCES Files(file_id)
+            FOREIGN KEY (pfp_id) REFERENCES Files(file_id)
         ) ENGINE=InnoDB;
     "#,
     r#"
@@ -52,8 +52,8 @@ pub const QUERIES: [&str; 6] = [
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             
             FOREIGN KEY (embed_id) REFERENCES Files(file_id),
-            FOREIGN KEY (poster) REFERENCES Accounts(account_id) ON DELETE CASCADE,
-            FOREIGN KEY (subicron) REFERENCES Subicrons(subicron_id) ON DELETE CASCADE,
+            FOREIGN KEY (poster_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
+            FOREIGN KEY (subicron_id) REFERENCES Subicrons(subicron_id) ON DELETE CASCADE,
 
             INDEX (header),
             INDEX (body)
@@ -71,11 +71,10 @@ pub const QUERIES: [&str; 6] = [
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             
             FOREIGN KEY (embed_id) REFERENCES Files(file_id),
-            FOREIGN KEY (commenter) REFERENCES Accounts(account_id) ON DELETE CASCADE,
+            FOREIGN KEY (commenter_id) REFERENCES Accounts(account_id) ON DELETE CASCADE,
             FOREIGN KEY (post_id) REFERENCES Posts(post_id) ON DELETE CASCADE,
 
-            INDEX (text),
-            INDEX (commenter)
+            INDEX (text)
         ) ENGINE=InnoDB;
     "#
 ];

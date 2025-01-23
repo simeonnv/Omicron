@@ -18,7 +18,9 @@ struct Res {
     get,
     path = "/subicron/{subicron_id}/posts/{post_id}",
     params(
-        ("search" = String, Query, description = "subicon search")
+        ("search" = String, Query, description = "subicon search"),
+        ("subicron_id" = String, Path, description = "Unique subicron ID"),
+        ("post_id" = String, Path, description = "Unique post ID")
     ),
     responses(
         (status = 200, description = "Signup successful", body = GetSubicronIdPostsResDocs, example = json!({
@@ -49,7 +51,7 @@ struct Res {
     ),
     tag = "Subicron Posts"
 )]
-#[get("/subicron/{subicron_id}/posts/{post_id}")]
+#[get("/{subicron_id}/posts/{post_id}")]
 async fn get_subicron_id_posts_id(
     token_data: HttpRequest,
     path: web::Path<(String, String)>,

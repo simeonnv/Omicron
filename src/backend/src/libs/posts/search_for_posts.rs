@@ -24,11 +24,11 @@ pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<Po
     let subicrons: Vec<PostsSearchRes> = sqlx::query_as(r#"
 
         SELECT post_id, header, body, embed_id, poster_id, subicron_id, upvotes, created_at
-        FROM Subicrons
+        FROM Posts
         WHERE 
             header LIKE ? OR
             body LIKE ? AND
-            subicron = ?
+            subicron_id = ?
         ORDER BY upvotes DESC
         LIMIT 10;
 
