@@ -15,6 +15,7 @@ pub enum Error {
     BadRequest(String),
     Internal(String),
     UniqueNameViolation(String),
+    NotFound(String)
 }
 
 impl fmt::Display for Error {
@@ -23,6 +24,7 @@ impl fmt::Display for Error {
             Error::BadRequest(msg) => write!(f, "Bad request: {}", msg),
             Error::Internal(msg) => write!(f, "Internal error: {}", msg),
             Error::UniqueNameViolation(msg) => write!(f, "Unique constraint violation: {}", msg),
+            Error::NotFound(msg) => write!(f, "Not Found: {}", msg),
         }
     }
 }
@@ -39,6 +41,10 @@ impl ResponseError for Error {
                 data: "",
             }),
             Error::UniqueNameViolation(msg) => HttpResponse::Conflict().json(ErrorRes {
+                status: msg.to_string(),
+                data: "",
+            }),
+            Error::NotFound(msg) => HttpResponse::NotFound().json(ErrorRes {
                 status: msg.to_string(),
                 data: "",
             }),

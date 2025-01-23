@@ -15,7 +15,7 @@ pub struct PostsSearchRes {
     pub created_at: NaiveDateTime,
 }
 
-pub async fn search_for_posts(query: &String) -> Result<Vec<PostsSearchRes>, Error> {
+pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<PostsSearchRes>, Error> {
 
     let pool = get_db_pool();
 
@@ -23,17 +23,19 @@ pub async fn search_for_posts(query: &String) -> Result<Vec<PostsSearchRes>, Err
 
     let subicrons: Vec<PostsSearchRes> = sqlx::query_as(r#"
 
-        SELECT post_id, header, body, embed_id, poster, subicron, upvotes, created_at
+        SELECT post_id, header, body, embed_id, poster_id, subicron_id, upvotes, created_at
         FROM Subicrons
         WHERE 
             header LIKE ? OR
-            body LIKE ?
+            body LIKE ? AND
+            subicron = ?
         ORDER BY upvotes DESC
         LIMIT 10;
 
     "#)
         .bind(&search_query)
         .bind(&search_query)
+        .bind(subicron_id)
         .fetch_all(pool)
         .await?;
     

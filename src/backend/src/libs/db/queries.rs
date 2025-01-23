@@ -1,4 +1,4 @@
-pub const QUERIES: [&str; 5] = [
+pub const QUERIES: [&str; 6] = [
     r#"
         CREATE TABLE IF NOT EXISTS Files (
             file_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,8 +46,8 @@ pub const QUERIES: [&str; 5] = [
             header VARCHAR(20) NOT NULL,
             body VARCHAR(510) NOT NULL,
             embed_id INT,
-            poster INT NOT NULL,
-            subicron INT NOT NULL,
+            poster_id INT NOT NULL,
+            subicron_id INT NOT NULL,
             upvotes INT DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             
@@ -57,6 +57,25 @@ pub const QUERIES: [&str; 5] = [
 
             INDEX (header),
             INDEX (body)
+        ) ENGINE=InnoDB;
+    "#,
+    r#"
+        CREATE TABLE IF NOT EXISTS Comments (
+            comment_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+
+            text VARCHAR(100) NOT NULL,
+            embed_id INT,
+            commenter_id INT NOT NULL,
+            post_id INT NOT NULL,
+            upvotes INT DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            
+            FOREIGN KEY (embed_id) REFERENCES Files(file_id),
+            FOREIGN KEY (commenter) REFERENCES Accounts(account_id) ON DELETE CASCADE,
+            FOREIGN KEY (post_id) REFERENCES Posts(post_id) ON DELETE CASCADE,
+
+            INDEX (text),
+            INDEX (commenter)
         ) ENGINE=InnoDB;
     "#
 ];

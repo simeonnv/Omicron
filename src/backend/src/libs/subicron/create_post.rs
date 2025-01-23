@@ -16,7 +16,7 @@ pub async fn create_post(header: &String, body: &String, embed: Option<i64>, pos
     sqlx::query(r#"
         
         INSERT INTO Posts
-        (header, body, embed_id, poster, subicron)
+        (header, body, embed_id, poster_id, subicron_id)
         VALUES(?, ?, ?, ?, ?);
         
     "#)

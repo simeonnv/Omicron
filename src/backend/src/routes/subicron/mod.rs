@@ -6,6 +6,7 @@ pub mod get_subicron;
 pub mod post_subicron_id_posts;
 pub mod get_subicron_id_posts;
 pub mod get_subicron_id;
+pub mod get_subicron_id_posts_id;
 
 
 pub fn subicron() -> Scope<impl ServiceFactory<ServiceRequest, Config = (), Response = ServiceResponse, Error = Error, InitError = ()>> {

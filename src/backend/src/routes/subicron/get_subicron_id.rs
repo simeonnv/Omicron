@@ -4,6 +4,7 @@ use utoipa::ToSchema;
 
 use crate::error::Error;
 use crate::libs::auth::auth_middleware::AccountData;
+use crate::libs::auth::parse_i64::parse_i64;
 use crate::libs::subicron::get_subicron_from_id::get_subicron_from_id;
 use crate::libs::subicron::search_for_subicron::SubicronSearchRes;
 
@@ -52,7 +53,9 @@ async fn get_subicron_id(
 ) -> Result<HttpResponse, Error> {
     if let Some(_) = token_data.extensions().get::<AccountData>() {
 
-        let subicron = get_subicron_from_id(&path).await?;
+        let subicron_id = parse_i64(path.to_string(), "invalid subicron")?;
+
+        let subicron = get_subicron_from_id(subicron_id).await?;
 
         if subicron.is_none() {
             return Ok(HttpResponse::NotFound().json(Res {

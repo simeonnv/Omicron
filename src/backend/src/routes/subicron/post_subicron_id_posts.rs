@@ -7,6 +7,7 @@ use crate::libs::auth::auth_middleware::AccountData;
 use crate::libs::auth::insure_file_exists::insure_file_exists;
 use crate::libs::auth::insure_string_size::insure_string_size;
 use crate::libs::auth::insure_subicron_exists::insure_subicron_exists;
+use crate::libs::auth::parse_i64::parse_i64;
 use crate::libs::subicron::create_post::create_post;
 
 
@@ -49,15 +50,13 @@ pub struct Req {
     security(
         ("bearer_auth" = [])
     ),
-    tag = "Subicron"
+    tag = "Subicron Posts"
 )]
 #[post("/{subicron_id}/posts")]
 async fn post_subicron_id_posts(token_data: HttpRequest, req: web::Json<Req>, path: web::Path<String>) -> Result<HttpResponse, Error> {
     if let Some(account_info) = token_data.extensions().get::<AccountData>() {
 
-        let subicron_id = path.parse::<i64>().map_err(|_| {
-            Error::BadRequest(format!("invalid subicron id: {}", path))
-        })?;
+        let subicron_id = parse_i64(path.to_string(), "invalid subicron")?;
         
         // insure everything is up to the hespotos hermanus standarts
         insure_string_size(&req.header, 5, 20)?;
