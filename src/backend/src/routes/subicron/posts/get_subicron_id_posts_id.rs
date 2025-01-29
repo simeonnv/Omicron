@@ -18,7 +18,6 @@ struct Res {
     get,
     path = "/subicron/{subicron_id}/posts/{post_id}",
     params(
-        ("search" = String, Query, description = "subicon search"),
         ("subicron_id" = String, Path, description = "Unique subicron ID"),
         ("post_id" = String, Path, description = "Unique post ID")
     ),

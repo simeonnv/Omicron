@@ -3,10 +3,9 @@ use crate::libs::auth::auth_middleware::AuthMiddleware;
 
 pub mod post_subicron;
 pub mod get_subicron;
-pub mod post_subicron_id_posts;
-pub mod get_subicron_id_posts;
 pub mod get_subicron_id;
-pub mod get_subicron_id_posts_id;
+pub mod posts;
+
 
 
 pub fn subicron() -> Scope<impl ServiceFactory<ServiceRequest, Config = (), Response = ServiceResponse, Error = Error, InitError = ()>> {
@@ -15,7 +14,9 @@ pub fn subicron() -> Scope<impl ServiceFactory<ServiceRequest, Config = (), Resp
         .service(post_subicron::post_subicron)
         .service(get_subicron::get_subicron)
         .service(get_subicron_id::get_subicron_id)
-        .service(post_subicron_id_posts::post_subicron_id_posts)
-        .service(get_subicron_id_posts::get_subicron_id_posts)
-        .service(get_subicron_id_posts_id::get_subicron_id_posts_id)
+        
+        //posts
+        .service(posts::post_subicron_id_posts::post_subicron_id_posts)
+        .service(posts::get_subicron_id_posts::get_subicron_id_posts)
+        .service(posts::get_subicron_id_posts_id::get_subicron_id_posts_id)
 }

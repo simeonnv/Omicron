@@ -1,4 +1,4 @@
-pub const QUERIES: [&str; 6] = [
+pub const QUERIES: [&str; 8] = [
     r#"
         CREATE TABLE IF NOT EXISTS Files (
             file_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -48,7 +48,6 @@ pub const QUERIES: [&str; 6] = [
             embed_id INT,
             poster_id INT NOT NULL,
             subicron_id INT NOT NULL,
-            upvotes INT DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             
             FOREIGN KEY (embed_id) REFERENCES Files(file_id),
@@ -67,7 +66,6 @@ pub const QUERIES: [&str; 6] = [
             embed_id INT,
             commenter_id INT NOT NULL,
             post_id INT NOT NULL,
-            upvotes INT DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             
             FOREIGN KEY (embed_id) REFERENCES Files(file_id),
@@ -75,6 +73,30 @@ pub const QUERIES: [&str; 6] = [
             FOREIGN KEY (post_id) REFERENCES Posts(post_id) ON DELETE CASCADE,
 
             INDEX (text)
+        ) ENGINE=InnoDB;
+    "#,
+    r#"
+        CREATE TABLE IF NOT EXISTS Comment_Upvotes (
+            comment_id INT NOT NULL,
+            account_id INT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            
+            PRIMARY KEY (account_id, comment_id),
+            FOREIGN KEY (comment_id) REFERENCES Comments(comment_id) ON DELETE CASCADE,
+            FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
+
+        ) ENGINE=InnoDB;
+    "#,
+    r#"
+        CREATE TABLE IF NOT EXISTS Post_Upvotes (
+            post_id INT NOT NULL,
+            account_id INT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            
+            PRIMARY KEY (account_id, post_id),
+            FOREIGN KEY (post_id) REFERENCES Posts(post_id) ON DELETE CASCADE,
+            FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
+
         ) ENGINE=InnoDB;
     "#
 ];
