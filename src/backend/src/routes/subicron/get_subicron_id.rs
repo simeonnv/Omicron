@@ -56,17 +56,10 @@ async fn get_subicron_id(
         let subicron_id = parse_i64(path.to_string(), "invalid subicron")?;
 
         let subicron = get_subicron_from_id(subicron_id).await?;
-
-        if subicron.is_none() {
-            return Ok(HttpResponse::NotFound().json(Res {
-                status: "Subicron doenst exist",
-                data: None,
-            }))
-        }
         
         return Ok(HttpResponse::Ok().json(Res {
             status: "Success",
-            data: subicron,
+            data: Some(subicron),
         }))
 
     } else {

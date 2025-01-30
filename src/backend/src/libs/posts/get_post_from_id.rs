@@ -11,21 +11,25 @@ pub struct PostSearchRes {
     pub embed_id: Option<i64>, 
     pub poster_id: i64, 
     pub subicron_id: i64, 
-    pub upvotes: i64,
-    pub created_at: NaiveDateTime
+    pub created_at: NaiveDateTime,
+    pub upvotes: i64
 }
 
-pub async fn get_post_from_id(post_id: i64, subicron_id: i64) -> Result<Option<PostSearchRes>, Error> {
+pub async fn get_post_from_id(post_id: i64, subicron_id: i64) -> Result<PostSearchRes, Error> {
 
     let pool = get_db_pool();
 
-    let subicrons: Option<PostSearchRes> = sqlx::query_as(r#"
+    let posts_res: Option<PostSearchRes> = sqlx::query_as(r#"
 
-        SELECT post_id, header, body, embed_id, poster_id, subicron_id, upvotes, created_at
-        FROM Posts
+        SELECT 
+            Posts.*, 
+            COUNT(Post_Upvotes.post_id) AS upvotes
+        FROM
+            Posts 
+            LEFT JOIN Post_Upvotes ON Posts.post_id = Post_Upvotes.post_id 
         WHERE 
-            subicron_id = ? AND
-            post_id = ?
+            Posts.subicron_id = ? AND
+            Posts.post_id = ?
         ;
 
     "#)
@@ -34,5 +38,10 @@ pub async fn get_post_from_id(post_id: i64, subicron_id: i64) -> Result<Option<P
         .fetch_optional(pool)
         .await?;
     
-    Ok(subicrons)
+    let posts = match posts_res {
+        Some(e) => e,
+        None => return Err(Error::NotFound("post not found".to_owned()))
+    };
+
+    Ok(posts)
 }

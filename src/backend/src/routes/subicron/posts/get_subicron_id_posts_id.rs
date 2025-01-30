@@ -64,7 +64,7 @@ async fn get_subicron_id_posts_id(
 
         return Ok(HttpResponse::Ok().json(Res {
             status: "Success",
-            data: post,
+            data: Some(post),
         }))
 
     } else {
@@ -79,7 +79,7 @@ async fn get_subicron_id_posts_id(
 #[derive(Serialize, ToSchema)]
 struct GetSubicronIdPostsResDocs {
     status: &'static str,
-    data: Option<Vec<PostsSearchResDocs>>
+    data: Vec<PostsSearchResDocs>
 }
 
 #[derive(sqlx::FromRow, Debug, Serialize, ToSchema)]
