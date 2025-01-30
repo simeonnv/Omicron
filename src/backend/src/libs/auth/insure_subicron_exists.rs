@@ -22,7 +22,7 @@ pub async fn insure_subicron_exists(subicron_id: i64) -> Result<(), Error> {
     if subicron_exists.count == 1 {
         return Ok(());
     } else {
-        return Err(Error::BadRequest(
+        return Err(Error::NotFound(
             "Subicron doesnt exist!".to_string()
         ))
     }
