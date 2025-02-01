@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use libs::auth::create_account::create_account;
 use libs::db;
 use tokio::sync::OnceCell;
@@ -24,9 +25,23 @@ async fn main() -> std::io::Result<()> {
 
     db::init_pool::init_pool().await.expect("Failed to initialize database");
     db::init_tables::init_tables().await.expect("Failed to initialize tables");
+    
     let _ = create_account(&"admin".to_string(), &"admin".to_string(), "admin", true).await;
+
     HttpServer::new(|| {
+
+        let cors = Cors::default()
+            .allow_any_origin() // Allow any origin
+            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE", "OPTIONS"]) // Allow all methods
+            .allowed_headers(vec![
+                actix_web::http::header::AUTHORIZATION,
+                actix_web::http::header::ACCEPT,
+            ])
+            .allowed_header(actix_web::http::header::CONTENT_TYPE)
+            .max_age(3600);
+
         App::new()
+            .wrap(cors)
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
 

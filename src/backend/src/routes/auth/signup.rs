@@ -16,7 +16,7 @@ pub struct Req {
 #[derive(Serialize, Deserialize)]
 struct Res<'a> {
     status: &'a str,
-    data: Option<String>
+    data: String
 }
 
 #[utoipa::path(
@@ -49,7 +49,7 @@ pub async fn signup(req: web::Json<Req>) -> Result<HttpResponse, Error> {
     if check_if_account_exists(&req.username).await? {
         return Ok(HttpResponse::Conflict().json(Res {
             status: "account already exists",
-            data: None,
+            data: "".to_string(),
         }))
     }
 
@@ -63,7 +63,7 @@ pub async fn signup(req: web::Json<Req>) -> Result<HttpResponse, Error> {
 
     return Ok(HttpResponse::Ok().json(Res {
         status: "success",
-        data: Some(token),
+        data: token,
     }));
    
 }

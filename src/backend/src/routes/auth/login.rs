@@ -17,7 +17,7 @@ pub struct Req {
 #[derive(Serialize, Deserialize)]
 struct Res<'a> {
     status: &'a str,
-    data: Option<String>
+    data: String
 }
 
 #[utoipa::path(
@@ -51,7 +51,7 @@ pub async fn login(req: web::Json<Req>) -> Result<HttpResponse, Error> {
     if !account.0 {
         return Ok(HttpResponse::Conflict().json(Res {
             status: "incorrect credentials",
-            data: None,
+            data: "".to_string(),
         }))
     }
 
@@ -61,7 +61,7 @@ pub async fn login(req: web::Json<Req>) -> Result<HttpResponse, Error> {
 
     return Ok(HttpResponse::Ok().json(Res {
         status: "success",
-        data: Some(token),
+        data: token,
     }));
    
 }

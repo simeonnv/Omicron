@@ -1,22 +1,20 @@
+use router::{switch, Route};
+use yew_router::prelude::*;
 use yew::prelude::*;
+
+mod router;
+mod routes;
+mod components;
+mod ui;
+mod libs;
+mod config;
 
 #[function_component]
 fn App() -> Html {
-    let counter = use_state(|| 0);
-    let onclick = {
-        let counter = counter.clone();
-        move |_| {
-            let value = *counter + 1;
-            counter.set(value);
-        }
-    };
-
     html! {
-        <div>
-            <button {onclick}>{ "+1" }</button>
-            <p>{ *counter }</p>
-            <h1 class="text-3xl font-bold underline bg-red-200">{"HELLO WORLD"}</h1>
-        </div>
+        <BrowserRouter>
+            <Switch<Route> render={switch} /> // <- must be child of <BrowserRouter>
+        </BrowserRouter>
     }
 }
 
