@@ -8,6 +8,8 @@ pub struct InputProps {
     pub placeholder: String,
     #[prop_or_default]
     pub disabled: bool,
+    #[prop_or_default]
+    pub class: Option<String>,
 }
 
 #[function_component(Input)]
@@ -23,7 +25,7 @@ pub fn input(props: &InputProps) -> Html {
     html! {
         <input
             type="text"
-            class="
+            class={format!("
 
                 transition-all
                 transition-discrete
@@ -37,7 +39,7 @@ pub fn input(props: &InputProps) -> Html {
                 border border-purple-600 rounded-lg 
                 p-2 focus:outline-2 focus:outline-offset-2
                 focus:outline-violet-700
-            "
+             {}", props.class.clone().unwrap_or_default())}
             value={props.value.clone()}
             {oninput}
             placeholder={props.placeholder.clone()}

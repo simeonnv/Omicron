@@ -1,4 +1,4 @@
-pub const QUERIES: [&str; 8] = [
+pub const QUERIES: [&str; 7] = [
     r#"
         CREATE TABLE IF NOT EXISTS Files (
             file_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,18 +73,6 @@ pub const QUERIES: [&str; 8] = [
             FOREIGN KEY (post_id) REFERENCES Posts(post_id) ON DELETE CASCADE,
 
             INDEX (text)
-        ) ENGINE=InnoDB;
-    "#,
-    r#"
-        CREATE TABLE IF NOT EXISTS Comment_Upvotes (
-            comment_id INT NOT NULL,
-            account_id INT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            
-            PRIMARY KEY (account_id, comment_id),
-            FOREIGN KEY (comment_id) REFERENCES Comments(comment_id) ON DELETE CASCADE,
-            FOREIGN KEY (account_id) REFERENCES Accounts(account_id) ON DELETE CASCADE
-
         ) ENGINE=InnoDB;
     "#,
     r#"

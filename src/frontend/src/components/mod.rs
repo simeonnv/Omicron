@@ -1,2 +1,5 @@
 pub mod protected;
-pub mod side_bar;
+pub mod sidebar;
+pub mod mainbody;
+pub mod welcome;
+pub mod subicron;

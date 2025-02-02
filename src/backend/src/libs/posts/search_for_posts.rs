@@ -12,7 +12,9 @@ pub struct PostsSearchRes {
     pub poster_id: i64,
     pub subicron_id: i64,
     pub upvotes: i64,
+    pub poster_username: String,
     pub created_at: NaiveDateTime,
+    pub is_upvoted: bool
 }
 
 pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<PostsSearchRes>, Error> {
@@ -24,17 +26,21 @@ pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<Po
     let subicrons: Vec<PostsSearchRes> = sqlx::query_as(r#"
 
         SELECT 
-            Posts.*, 
-            COUNT(Post_Upvotes.post_id) AS upvotes
+            Posts.*,
+            Accounts.username AS poster_username,
+            (SELECT COUNT(*) FROM Post_Upvotes WHERE Post_Upvotes.post_id = Posts.post_id) AS upvotes,
+            (SELECT COUNT(*) FROM Post_Upvotes WHERE Post_Upvotes.account_id = Posts.poster_id AND Post_Upvotes.post_id = Posts.post_id) AS is_upvoted
         FROM
             Posts 
-            LEFT JOIN Post_Upvotes ON Posts.post_id = Post_Upvotes.post_id 
+            INNER JOIN Accounts ON Posts.poster_id = Accounts.account_id
         WHERE 
-            Posts.header LIKE ? OR
-            Posts.body LIKE ? AND
-            Posts.subicron_id = ?
+            (Posts.header LIKE ? OR
+            Posts.body LIKE ?)
+            AND Posts.subicron_id = ?
         ORDER BY upvotes DESC
         LIMIT 10;
+
+		       
 
 
     "#)

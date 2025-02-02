@@ -1,14 +1,19 @@
-use gloo_timers::future::TimeoutFuture;
 use web_sys::console;
 use yew::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 
-use crate::{libs::request::get_subicrons_req::{get_subicrons_req, Subicron}, ui::{button::Button, image::Image, input::Input}};
+use crate::{libs::{request::get_subicrons_req::get_subicrons_req, structs::subicron::SubicronStruct}, ui::{button::Button, image::Image, input::Input}};
+
+#[derive(Properties, PartialEq)]
+pub struct SidebarProps {
+    pub selected_subicron: UseStateHandle<i64>,
+}
+
 
 #[function_component(Sidebar)]
-pub fn sidebar() -> Html {
+pub fn sidebar(props: &SidebarProps) -> Html {
     let subicron_search_query = use_state(|| String::new());
-    let subicrons = use_state(|| Vec::<Subicron>::new());
+    let subicrons = use_state(|| Vec::<SubicronStruct>::new());
 
     // Callback for search query input change
     let on_search_change = {
@@ -22,7 +27,7 @@ pub fn sidebar() -> Html {
         let subicron_search_query = subicron_search_query.clone();
         let subicrons = subicrons.clone();
 
-        use_effect_with(subicron_search_query.to_string(), move |query| {  // ✅ Fix applied
+        use_effect_with(subicron_search_query.to_string(), move |query| {
             let query = query.clone();
             let subicrons = subicrons.clone();
 
@@ -76,7 +81,22 @@ pub fn sidebar() -> Html {
                                     class="h-6 w-6 min-h-6 min-w-6"
                                 />
                                 <p class="grow text-xs">{ &subicron.name }</p>
-                                <Button class="shrink h-min w-min !text-xs" label=">"/>
+                                <Button 
+                                    class={
+                                        format!(
+                                            "shrink h-min w-min !text-xs {}",
+                                            if subicron.subicron_id == *props.selected_subicron { "!bg-purple-950" } else { "" }
+                                        )
+                                    }
+                                    label=">"
+                                    on_click={
+                                        let selected_subicron = props.selected_subicron.clone();
+                                        let subicron_id = subicron.subicron_id;
+                                        Callback::from(move |_| {
+                                            selected_subicron.set(subicron_id);
+                                        })
+                                    }
+                                />
                             </div>
                         }
                     }).collect::<Html>()

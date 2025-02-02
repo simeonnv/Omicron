@@ -12,6 +12,7 @@ pub struct PostSearchRes {
     pub poster_id: i64, 
     pub subicron_id: i64, 
     pub created_at: NaiveDateTime,
+    pub poster_username: String,
     pub upvotes: i64
 }
 
@@ -22,10 +23,12 @@ pub async fn get_post_from_id(post_id: i64, subicron_id: i64) -> Result<PostSear
     let posts_res: Option<PostSearchRes> = sqlx::query_as(r#"
 
         SELECT 
-            Posts.*, 
+            Posts.*,
+            Accounts.username AS poster_username, 
             COUNT(Post_Upvotes.post_id) AS upvotes
         FROM
-            Posts 
+            Posts
+            INNER JOIN Accounts ON Posts.poster_id = Accounts.account_id
             LEFT JOIN Post_Upvotes ON Posts.post_id = Post_Upvotes.post_id 
         WHERE 
             Posts.subicron_id = ? AND
