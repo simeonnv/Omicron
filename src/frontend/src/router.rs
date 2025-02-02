@@ -1,6 +1,6 @@
 use yew::{html, Html};
 use yew_router::Routable;
-use crate::{components::protected::Protected, routes::{login::Login, signup::Signup}};
+use crate::{components::protected::Protected, routes::{home::Home, login::Login, signup::Signup}};
 
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {
@@ -22,7 +22,7 @@ pub fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => html! {
             <Protected>
-                <h1>{ "Home" }</h1>
+               <Home/>
             </Protected>
         },
         

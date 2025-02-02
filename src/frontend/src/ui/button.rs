@@ -6,6 +6,9 @@ pub struct ButtonProps {
 
     #[prop_or_default]
     pub on_click: Option<Callback<MouseEvent>>,
+
+    #[prop_or_default]
+    pub class: Option<String>,
 }
 
 #[function_component(Button)]
@@ -14,14 +17,14 @@ pub fn button(props: &ButtonProps) -> Html {
 
     html! {
         <button 
-            class="
+            class={format!("
                 transition-all
                 transition-discrete
                 ease-in-out
                 duration-150
 
                 transform
-                hover:-translate-y-1
+                hover:-translate-y-0.5
 
                 flex w-full justify-center 
                 rounded-md bg-purple-600 px-3 
@@ -34,7 +37,7 @@ pub fn button(props: &ButtonProps) -> Html {
                 focus:outline-2 focus:outline-offset-2 
                 focus:outline-violet-500 active:bg-violet-800
                 
-            " 
+            {}", props.class.clone().unwrap_or_default())}
             {onclick}
         >
             {&props.label}
