@@ -43,6 +43,7 @@ impl Modify for BearerAuthAddon {
         routes::subicron::posts::post_subicron_id_posts::post_subicron_id_posts,
         routes::subicron::posts::get_subicron_id_posts::get_subicron_id_posts,
         routes::subicron::posts::get_subicron_id_posts_id::get_subicron_id_posts_id,
+        routes::subicron::posts::post_subicron_id_posts_id_upvote::post_subicron_id_posts_id_upvote,
         routes::subicron::posts::get_subicron_id_posts_id_upvote::get_subicron_id_posts_id_upvote,
         routes::subicron::posts::delete_subicron_id_posts_id_upvote::delete_subicron_id_posts_id_upvote,
 

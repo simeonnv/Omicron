@@ -11,10 +11,8 @@ pub struct PostsSearchRes {
     pub embed_id: Option<i64>,
     pub poster_id: i64,
     pub subicron_id: i64,
-    pub upvotes: i64,
     pub poster_username: String,
     pub created_at: NaiveDateTime,
-    pub is_upvoted: bool
 }
 
 pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<PostsSearchRes>, Error> {
@@ -27,9 +25,7 @@ pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<Po
 
         SELECT 
             Posts.*,
-            Accounts.username AS poster_username,
-            (SELECT COUNT(*) FROM Post_Upvotes WHERE Post_Upvotes.post_id = Posts.post_id) AS upvotes,
-            (SELECT COUNT(*) FROM Post_Upvotes WHERE Post_Upvotes.account_id = Posts.poster_id AND Post_Upvotes.post_id = Posts.post_id) AS is_upvoted
+            Accounts.username AS poster_username
         FROM
             Posts 
             INNER JOIN Accounts ON Posts.poster_id = Accounts.account_id
@@ -37,11 +33,8 @@ pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<Po
             (Posts.header LIKE ? OR
             Posts.body LIKE ?)
             AND Posts.subicron_id = ?
-        ORDER BY upvotes DESC
+        ORDER BY created_at DESC
         LIMIT 10;
-
-		       
-
 
     "#)
         .bind(&search_query)

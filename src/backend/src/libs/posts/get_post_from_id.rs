@@ -13,7 +13,6 @@ pub struct PostSearchRes {
     pub subicron_id: i64, 
     pub created_at: NaiveDateTime,
     pub poster_username: String,
-    pub upvotes: i64
 }
 
 pub async fn get_post_from_id(post_id: i64, subicron_id: i64) -> Result<PostSearchRes, Error> {
@@ -24,16 +23,16 @@ pub async fn get_post_from_id(post_id: i64, subicron_id: i64) -> Result<PostSear
 
         SELECT 
             Posts.*,
-            Accounts.username AS poster_username, 
-            COUNT(Post_Upvotes.post_id) AS upvotes
+            Accounts.username AS poster_username
         FROM
-            Posts
+            Posts 
             INNER JOIN Accounts ON Posts.poster_id = Accounts.account_id
-            LEFT JOIN Post_Upvotes ON Posts.post_id = Post_Upvotes.post_id 
         WHERE 
             Posts.subicron_id = ? AND
             Posts.post_id = ?
-        ;
+        ORDER BY created_at DESC
+        LIMIT 10;
+
 
     "#)
         .bind(subicron_id)

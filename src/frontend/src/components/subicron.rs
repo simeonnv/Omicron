@@ -2,7 +2,7 @@ use web_sys::console;
 use yew::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 
-use crate::{libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{image::Image, input::Input, spinner::Spinner}};
+use crate::{components::post_preview::PostPreview, libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{image::Image, input::Input, spinner::Spinner}};
 
 #[derive(Properties, PartialEq)]
 pub struct SubicronProps {
@@ -140,61 +140,7 @@ pub fn subicron(props: &SubicronProps) -> Html {
                             {
                                 posts_ref.iter().map(|post| {
                                     html!{
-                                        <div key={post.post_id.clone()} class="
-                                            min-h-full w-full border border-purple-600 
-                                            hover:border-purple-800 border-3 border-dashed
-                                            transition-all transition-discrete
-                                            ease-in-out duration-150 rounded-md p-4 flex flex-col">
-
-                                            <div class="text-purple-600 text-xl w-full max-w-full overflow-hidden break-words">
-                                                {post.header.clone()}
-                                            </div>
-
-                                            
-                                            {
-                                                if !post.embed_id.is_none(){
-                                                    html! {
-                                                        <div class="flex-1 w-full h-full rounded-md overflow-hidden">
-                                                            <Image
-                                                                alt={post.header.clone()}
-                                                                image_id={post.embed_id}
-                                                                class="w-full h-full object-cover !rounded-md border-2"
-                                                            />
-                                                        </div>
-                                                    }
-                                                } else {
-                                                    html! {
-                                                        <div class="flex-1 w-full h-full rounded-md overflow-visible whitespace-normal break-words">
-                                                            {post.body.clone()}
-                                                        </div>
-                                                    }
-                                                }
-                                                
-                                            }
-                                            
-                                            
-                                            <div class="flex flex-row items-center py-4">
-                                                <p>
-                                                    {format!("By {}", post.poster_username)}
-                                                </p>
-                                                <div class="grow"/>
-                                                
-                                                <div class="
-                                                    mx-4 border-2 border-purple-600 
-                                                    hover:border-purple-800 hover:-translate-y-0.5 
-                                                    rounded-lg transition-all
-                                                    transition-discrete ease-in-out
-                                                    duration-150 transform
-                                                ">
-                                                    <svg class={format!("h-6 w-6 {}", if post.is_upvoted {"fill-purple-600"} else {""})} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-80v-647L256-544l-56-56 280-280 280 280-56 57-184-184v647h-80Z"/></svg>
-                                                </div>
-
-                                                <p class="text-purple-600">
-                                                    {format!("Upvotes {}", post.upvotes)}
-                                                </p>
-                                            </div>
-
-                                        </div>
+                                        <PostPreview post={post.clone()}/>
                                     }
                                 }).collect::<Html>()
                             }

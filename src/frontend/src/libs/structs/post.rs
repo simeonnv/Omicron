@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
+use yew::Properties;
 
 
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Properties, PartialEq, Clone)]
 pub struct PostStruct {
     pub body: String,
     pub created_at: String,
@@ -11,7 +12,5 @@ pub struct PostStruct {
     pub post_id: i64,
     pub poster_id: i64,
     pub subicron_id: i64,
-    pub poster_username: String,
-    pub upvotes: i64,
-    pub is_upvoted: bool
+    pub poster_username: String
 }
