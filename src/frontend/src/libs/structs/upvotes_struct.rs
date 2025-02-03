@@ -3,8 +3,8 @@ use yew::Properties;
 
 
 
-#[derive(Deserialize, Serialize, Debug, Properties, PartialEq, Clone)]
+#[derive(Deserialize, Serialize, Debug, Properties, PartialEq, Clone, Default)]
 pub struct UpvotesStruct {
-    is_upvoted: bool,
-    upvotes: i64
+    pub is_upvoted: bool,
+    pub upvotes: i64
 }

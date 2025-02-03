@@ -29,7 +29,7 @@ pub fn subicron(props: &SubicronProps) -> Html {
 
             spawn_local(async move {
                 console::log_1(&format!("selected subicron is: {}", *selected_subicron).into());
-
+                
                 match get_subicron_req((*selected_subicron).to_string()).await {
                     Ok(fetched_subicron) => {
                         // console::log_1(&format!("Fetched subicron: {}", serde_json::to_string(&fetched_subicron).unwrap_or("".to_string())).into());

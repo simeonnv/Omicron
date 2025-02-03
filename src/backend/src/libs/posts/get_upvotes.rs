@@ -22,7 +22,7 @@ pub async fn get_upvotes(account_id: i64, post_id: i64) -> Result<GetUpvotesRes,
             Post_Upvotes
         WHERE
             post_id = ?
-        HAVING COUNT(*) > 0;
+        ;
             
     "#)
         .bind(&account_id)
