@@ -7,6 +7,7 @@ use crate::{libs::{request::get_subicrons_req::get_subicrons_req, structs::subic
 #[derive(Properties, PartialEq)]
 pub struct SidebarProps {
     pub selected_subicron: UseStateHandle<i64>,
+    pub post_id: UseStateHandle<i64>, 
 }
 
 
@@ -18,6 +19,7 @@ pub fn sidebar(props: &SidebarProps) -> Html {
     // Callback for search query input change
     let on_search_change = {
         let subicron_search_query = subicron_search_query.clone();
+
         Callback::from(move |value: String| {
             subicron_search_query.set(value);
         })
@@ -92,8 +94,10 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                                     on_click={
                                         let selected_subicron = props.selected_subicron.clone();
                                         let subicron_id = subicron.subicron_id;
+                                        let post_id = props.post_id.clone();
                                         Callback::from(move |_| {
                                             selected_subicron.set(subicron_id);
+                                            post_id.set(0);
                                         })
                                     }
                                 />

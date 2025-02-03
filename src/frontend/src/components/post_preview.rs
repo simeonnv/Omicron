@@ -7,12 +7,13 @@ use crate::{
         request::{downvote_req::downvote_req, get_upvotes_req::get_upvotes_req, upvote_req::upvote_req},
         structs::{post::PostStruct, upvotes_struct::UpvotesStruct},
     },
-    ui::{image::Image, spinner::Spinner},
+    ui::{enter_post_button::EnterPostButton, image::Image, spinner::Spinner, upvote_button::UpvoteButton},
 };
 
 #[derive(Properties, PartialEq)]
 pub struct PostPreviewProps {
     pub post: PostStruct,
+    pub post_id: UseStateHandle<i64>, 
 }
 
 #[function_component(PostPreview)]
@@ -51,7 +52,7 @@ pub fn post_preview(props: &PostPreviewProps) -> Html {
         });
     }
     
-    let onclick = {
+    let on_upvote = {
         let upvotes_ref = upvotes_ref.clone();
         let subicron_id = subicron_id.clone();
         let post_id = post_id.clone();
@@ -92,7 +93,15 @@ pub fn post_preview(props: &PostPreviewProps) -> Html {
         })
     };
 
+    let on_enter = {
+        let post = props.post.clone();
+        let post_id = props.post_id.clone();
+        
 
+        Callback::from(move |_| {
+            post_id.set(post.post_id)
+        })
+    };
 
 
     html! {
@@ -102,8 +111,14 @@ pub fn post_preview(props: &PostPreviewProps) -> Html {
             transition-all transition-discrete
             ease-in-out duration-150 rounded-md p-4 flex flex-col">
 
-            <div class="text-purple-600 text-xl w-full max-w-full overflow-hidden break-words">
-                {props.post.header.clone()}
+            <div class="relative flex flex-row items-center justify-center w-full">
+                <div class="text-purple-600 text-xl text-center">
+                    {props.post.header.clone()}
+                </div>
+
+                <div class="absolute right-0">
+                    <EnterPostButton on_click={on_enter}/>
+                </div>
             </div>
                 
             {
@@ -138,15 +153,7 @@ pub fn post_preview(props: &PostPreviewProps) -> Html {
                             
                             <div class="grow"/>
                             
-                            <div {onclick} class="
-                                mx-4 border-2 border-purple-600 
-                                hover:border-purple-800 hover:-translate-y-0.5 
-                                rounded-lg transition-all
-                                transition-discrete ease-in-out
-                                duration-150 transform
-                            ">
-                                <svg class={format!("h-6 w-6 {}", if upvotes.is_upvoted {"fill-purple-600"} else {""})} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-80v-647L256-544l-56-56 280-280 280 280-56 57-184-184v647h-80Z"/></svg>
-                            </div>
+                            <UpvoteButton is_upvoted={upvotes.is_upvoted} on_click={on_upvote}/>
                             
                             <p class="text-purple-600">
                                 {format!("Upvotes {}", upvotes.upvotes)} 

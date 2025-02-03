@@ -7,11 +7,12 @@ use crate::components::{mainbody::MainBody, sidebar::Sidebar};
 pub fn home() -> Html {
     
     let selected_subicron = use_state(|| 0_i64);
+    let post_id = use_state(|| 0_i64);
 
     html! {
         <div class="flex min-h-full flex-row">
-            <Sidebar selected_subicron={selected_subicron.clone()}/>
-            <MainBody selected_subicron={selected_subicron.clone()}/>
+            <Sidebar selected_subicron={selected_subicron.clone()} post_id={post_id.clone()}/>
+            <MainBody selected_subicron={selected_subicron.clone()} post_id={post_id.clone()}/>
         </div>
     }
 

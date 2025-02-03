@@ -3,7 +3,7 @@ use yew::Properties;
 
 
 
-#[derive(Deserialize, Serialize, Debug, Properties, PartialEq, Clone)]
+#[derive(Deserialize, Serialize, Debug, Properties, PartialEq, Clone, Default)]
 pub struct PostStruct {
     pub body: String,
     pub created_at: String,

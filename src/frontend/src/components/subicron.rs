@@ -2,11 +2,12 @@ use web_sys::console;
 use yew::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 
-use crate::{components::post_preview::PostPreview, libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{image::Image, input::Input, spinner::Spinner}};
+use crate::{components::post_preview::PostPreview, libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{input::Input, spinner::Spinner}};
 
 #[derive(Properties, PartialEq)]
 pub struct SubicronProps {
     pub selected_subicron: UseStateHandle<i64>,
+    pub post_id: UseStateHandle<i64>
 }
 
 
@@ -140,7 +141,7 @@ pub fn subicron(props: &SubicronProps) -> Html {
                             {
                                 posts_ref.iter().map(|post| {
                                     html!{
-                                        <PostPreview post={post.clone()}/>
+                                        <PostPreview post={post.clone()} post_id={props.post_id.clone()}/>
                                     }
                                 }).collect::<Html>()
                             }

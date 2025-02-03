@@ -6,3 +6,4 @@ pub mod get_posts_req;
 pub mod get_upvotes_req;
 pub mod upvote_req;
 pub mod downvote_req;
+pub mod get_post_req;
