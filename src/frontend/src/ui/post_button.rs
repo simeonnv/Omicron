@@ -10,8 +10,8 @@ pub struct EnterPostButtonProps {
     pub class: Option<String>,
 }
 
-#[function_component(EnterPostButton)]
-pub fn enter_post_button(props: &EnterPostButtonProps) -> Html {
+#[function_component(PostButton)]
+pub fn post_button(props: &EnterPostButtonProps) -> Html {
     let onclick = props.on_click.clone().unwrap_or_default();
 
     html! {

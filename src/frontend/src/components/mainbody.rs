@@ -16,14 +16,13 @@ pub fn home(props: &MainBodyProps) -> Html {
 
     html! {
         <div class="
+            box-border
             transition-all
             transition-discrete
             ease-in-out
             duration-150
-
-            max-h-screen min-h-screen
-            flex min-h-full w-full
-            flex-col  items-center
+            h-screen w-full // Changed from max-h-screen/min-h-screen
+            flex flex-col items-center
             border-y-2 border-r-2 border-dashed
             border-r-purple-600 border-y-purple-600
             hover:border-r-purple-700 hover:border-y-purple-700

@@ -8,7 +8,8 @@ pub struct Comment {
     pub text: String,
     pub embed_id: Option<i64>,
     pub commenter_id: i64,
-    pub created_at: NaiveDateTime
+    pub created_at: NaiveDateTime,
+    pub commenter_username: String
 }
 
 pub async fn get_comments_on_post(post_id: i64, page: i64) -> Result<Vec<Comment>, Error> {
@@ -17,11 +18,17 @@ pub async fn get_comments_on_post(post_id: i64, page: i64) -> Result<Vec<Comment
 
     let posts_res: Vec<Comment> = sqlx::query_as(r#"
 
-        SELECT comment_id, `text`, embed_id, commenter_id, created_at
-        FROM Comments
+        SELECT 
+            Comments.comment_id, Comments.`text`,
+            Comments.embed_id, Comments.commenter_id, Comments.created_at,
+            Accounts.username AS commenter_username
+        FROM 
+            Comments
+            INNER JOIN Accounts ON Comments.commenter_id = Accounts.account_id
         WHERE post_id = ?
         ORDER BY created_at DESC
         LIMIT ?;
+       
 
     "#)
         .bind(post_id)

@@ -7,7 +7,7 @@ use crate::{
         request::{downvote_req::downvote_req, get_upvotes_req::get_upvotes_req, upvote_req::upvote_req},
         structs::{post::PostStruct, upvotes_struct::UpvotesStruct},
     },
-    ui::{enter_post_button::EnterPostButton, image::Image, spinner::Spinner, upvote_button::UpvoteButton},
+    ui::{post_button::PostButton, image::Image, spinner::Spinner, upvote_button::UpvoteButton},
 };
 
 #[derive(Properties, PartialEq)]
@@ -117,7 +117,7 @@ pub fn post_preview(props: &PostPreviewProps) -> Html {
                 </div>
 
                 <div class="absolute right-0">
-                    <EnterPostButton on_click={on_enter}/>
+                    <PostButton on_click={on_enter}/>
                 </div>
             </div>
                 

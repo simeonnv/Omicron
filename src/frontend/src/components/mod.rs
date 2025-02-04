@@ -5,3 +5,4 @@ pub mod welcome;
 pub mod subicron;
 pub mod post_preview;
 pub mod post;
+pub mod comment;

@@ -7,3 +7,5 @@ pub mod get_upvotes_req;
 pub mod upvote_req;
 pub mod downvote_req;
 pub mod get_post_req;
+pub mod get_comments_req;
+pub mod post_comment_req;
