@@ -48,7 +48,10 @@ impl Modify for BearerAuthAddon {
         routes::subicron::posts::delete_subicron_id_posts_id_upvote::delete_subicron_id_posts_id_upvote,
 
         routes::subicron::comments::get_subicron_id_posts_id_comments::get_subicron_id_posts_id_comments,
-        routes::subicron::comments::post_subicron_id_posts_id_comments::post_subicron_id_posts_id_comments
+        routes::subicron::comments::post_subicron_id_posts_id_comments::post_subicron_id_posts_id_comments,
+
+        routes::files::get_files_id::get_files_id,
+        routes::files::post_files_id::post_files_id
     ),
     modifiers(&BearerAuthAddon),
     // tags(

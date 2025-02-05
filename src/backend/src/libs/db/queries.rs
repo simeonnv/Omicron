@@ -1,22 +1,25 @@
 pub const QUERIES: [&str; 7] = [
     r#"
-        CREATE TABLE IF NOT EXISTS Files (
-            file_id INT AUTO_INCREMENT PRIMARY KEY,
-            file_name VARCHAR(255) NOT NULL,
-            file_data LONGBLOB NOT NULL,
-            file_size INT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB;
-    "#,
-    r#"
         CREATE TABLE IF NOT EXISTS Accounts (
             account_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
             pfp_id INT DEFAULT NULL,
             username VARCHAR(20) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
             role VARCHAR(20) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+    "#,
+    r#"
+        CREATE TABLE IF NOT EXISTS Files (
+            file_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+            file_blob MEDIUMBLOB NOT NULL,
+            size INT NOT NULL,
+            file_type VARCHAR(256) NOT NULL,
+
+            account_id INT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (pfp_id) REFERENCES Files(file_id)
+            
+            FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
         ) ENGINE=InnoDB;
     "#,
     r#"
@@ -35,7 +38,6 @@ pub const QUERIES: [&str; 7] = [
             image_id INT,
             name VARCHAR(20) NOT NULL UNIQUE,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (image_id) REFERENCES Files(file_id),
             
             INDEX (name)
         ) ENGINE=InnoDB;

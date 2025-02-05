@@ -4,3 +4,4 @@ pub mod db;
 pub mod subicron;
 pub mod posts;
 pub mod comments;
+pub mod files;

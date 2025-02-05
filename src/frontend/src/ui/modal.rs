@@ -1,6 +1,9 @@
 use wasm_bindgen::{prelude::Closure, JsCast};
+use wasm_bindgen_futures::spawn_local;
 use web_sys::{js_sys::{Array, Uint8Array}, FileReader, HtmlInputElement, HtmlTextAreaElement, Url};
 use yew::prelude::*;
+
+use crate::libs::request::post_file_req::post_file_req;
 
 #[derive(Properties, PartialEq)]
 pub struct ModalProps {
@@ -20,11 +23,11 @@ pub enum FormSubmission {
     Post { 
         title: String, 
         content: String,
-        image: Option<Vec<u8>>,
+        image: Option<i64>,
     },
     Comment { 
         content: String,
-        image: Option<Vec<u8>>, // Add image field to comments
+        image: Option<i64>, // Add image field to comments
     },
 }
 
@@ -39,7 +42,7 @@ pub fn blob_image(props: &BlobImageProps) -> Html {
     let url = use_state(|| None::<String>);
     
     // Fixed use_effect_with usage
-    use_effect_with((), {
+    use_effect_with(props.data.clone(), {
         let data = props.data.clone();
         let url = url.clone();
         move |_| {
@@ -119,7 +122,9 @@ pub fn modal(props: &ModalProps) -> Html {
             }
         })
     };
-    // Form submission handler
+
+
+
     let onsubmit = {
         let is_open = is_open.clone();
         let title = title.clone();
@@ -128,30 +133,56 @@ pub fn modal(props: &ModalProps) -> Html {
         let preview_url = preview_url.clone();
         let form_type = form_type.clone();
         let on_submit = on_submit.clone();
-        
+    
         Callback::from(move |e: SubmitEvent| {
             e.prevent_default();
-            let submission = match form_type {
-                FormType::Post => FormSubmission::Post {
-                    title: title.to_string(),
-                    content: content.to_string(),
-                    image: (*image_data).clone(),
-                },
-                FormType::Comment => FormSubmission::Comment {
-                    content: content.to_string(),
-                    image: (*image_data).clone(), // Include image for comments
-                },
-            };
-            on_submit.emit(submission);
-            is_open.set(false);
-            title.set(String::new());
-            content.set(String::new());
-            image_data.set(None);
-            preview_url.set(None);
+    
+            // Clone the state variables inside the closure to avoid moving the original captures
+            let is_open = is_open.clone();
+            let title = title.clone();
+            let content = content.clone();
+            let image_data = image_data.clone();
+            let preview_url = preview_url.clone();
+            let form_type = form_type.clone();
+            let on_submit = on_submit.clone();
+    
+            spawn_local(async move {
+                let mut image_id = None;
+    
+                if let Some(image) = image_data.as_ref() {
+                    match post_file_req(image.clone()).await {
+                        Ok(id) => image_id = Some(id),
+                        Err(err) => {
+                            web_sys::console::log_1(&format!("Error uploading image: {}", err).into());
+                        }
+                    }
+                }
+    
+                let submission = match form_type {
+                    FormType::Post => FormSubmission::Post {
+                        title: (*title).clone(),
+                        content: (*content).clone(),
+                        image: image_id,
+                    },
+                    FormType::Comment => FormSubmission::Comment {
+                        content: (*content).clone(),
+                        image: image_id,
+                    },
+                };
+    
+                on_submit.emit(submission);
+    
+                // Update state with cloned handles
+                is_open.set(false);
+                title.set(String::new());
+                content.set(String::new());
+                image_data.set(None);
+                preview_url.set(None);
+            });
         })
     };
 
-    // Title input handler (only for posts)
+
     let title_handler = {
         let title = title.clone();
         Callback::from(move |e: InputEvent| {

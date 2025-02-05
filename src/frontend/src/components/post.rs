@@ -170,7 +170,7 @@ pub fn post(props: &PostPreviewProps) -> Html {
                     let comment_hook = comment_hook.clone(); // Clone inside async block to avoid move issues
     
                     spawn_local(async move {
-                        match post_comment_req(subicron_id, post_id, content, None).await {
+                        match post_comment_req(subicron_id, post_id, content, image).await {
                             Ok(_) => {
                                 comment_hook.set(*comment_hook + 1); // Now we use the cloned state
                             }
@@ -204,7 +204,7 @@ pub fn post(props: &PostPreviewProps) -> Html {
                 {
                     
 
-                    if post_ref.embed_id.is_none() {
+                    if !post_ref.embed_id.is_none() {
                         let image_id = post_ref.embed_id.unwrap_or(1);
                         let upvotes = (*upvotes_ref).clone().unwrap_or_default();
 
@@ -237,11 +237,21 @@ pub fn post(props: &PostPreviewProps) -> Html {
 
                         html! {
                             <div class="w-full flex flex-col justify-center items-center text-2xl text-purple-600">
-                                <UpvoteButton is_upvoted={upvotes.is_upvoted} on_click={on_upvote}/>
+                                <div class="flex flex-row w-full">
+                                    <div class="flex flex-col justify-start justify-items-start content-start items-start">
+                                        <p>{format!("By {}", post_ref.poster_username)}</p>
+                                        <p>{format!("Posted on {}", post_ref.created_at)}</p>
+                                    </div>
                                     
-                                <p class="text-purple-600">
-                                    {format!("Upvotes {}", upvotes.upvotes)} 
-                                </p>
+                                    <div class="grow"/>
+                                    <div class="flex flex-row justify-center justify-items-center content-center items-center">
+                                        <UpvoteButton is_upvoted={upvotes.is_upvoted} on_click={on_upvote}/>
+                                        
+                                        <p class="text-purple-600">
+                                            {format!("Upvotes {}", upvotes.upvotes)} 
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         }
                     }

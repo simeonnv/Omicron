@@ -16,3 +16,4 @@ sqlx = { version = "0.8.3", features = [ "runtime-tokio", "mysql", "chrono" ] }
 tokio = { version = "1.43.0", features = ["full"] }
 utoipa = "5.2.0"
 utoipa-swagger-ui = { version = "9.0.0", features = ["actix-web"] }
+infer = "0.19.0"

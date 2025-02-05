@@ -2,7 +2,7 @@ use web_sys::console;
 use yew::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 
-use crate::{components::post_preview::PostPreview, libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{input::Input, spinner::Spinner}};
+use crate::{components::post_preview::PostPreview, libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req, post_post_req::post_post_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{input::Input, modal::{FormSubmission, FormType, Modal}, spinner::Spinner}};
 
 #[derive(Properties, PartialEq)]
 pub struct SubicronProps {
@@ -44,13 +44,16 @@ pub fn subicron(props: &SubicronProps) -> Html {
         });
     }
 
+    let posts_hook = use_state(|| 0_i64);
+
     {
         let selected_subicron = props.selected_subicron.clone();
         let post_search_query = post_search_query.clone();
         let posts_ref = posts_ref.clone();
+        let posts_hook = posts_hook.clone();
 
         use_effect_with(
-            (*selected_subicron, (*post_search_query).clone()), move |(selected_subicron, post_search_query)| {
+            (*selected_subicron, (*post_search_query).clone(), *posts_hook), move |(selected_subicron, post_search_query, _)| {
 
                 let selected_subicron = selected_subicron.clone();
                 let post_search_query = post_search_query.clone();
@@ -72,6 +75,33 @@ pub fn subicron(props: &SubicronProps) -> Html {
         );
     }
 
+    let handle_submit = {
+        let selected_subicron = *props.selected_subicron; // Clone the value to avoid moving the reference
+        let posts_hook = posts_hook.clone();
+    
+        Callback::from(move |submission: FormSubmission| {
+            match submission {
+                FormSubmission::Comment { content, image } => {
+                    console::log_1(&format!("You are stupid: {}", content).into());
+                }
+                FormSubmission::Post { title, content, image } => {
+                    console::log_1(&format!("Creating post: {}", content).into());
+    
+                    let posts_hook = posts_hook.clone(); // Clone inside async block to avoid move issues
+                    let selected_subicron = selected_subicron; // Use the cloned value
+    
+                    spawn_local(async move {
+                        match post_post_req(selected_subicron, title, content, image).await {
+                            Ok(_) => {
+                                posts_hook.set(*posts_hook + 1); // Now we use the cloned state
+                            }
+                            Err(e) => console::log_1(&format!("Failed to post: {}", e).into()),
+                        }
+                    });
+                }
+            }
+        })
+    };
 
     html! {
         <div class="max-h-screen min-h-screen h-full w-full">
@@ -124,19 +154,14 @@ pub fn subicron(props: &SubicronProps) -> Html {
                                         class="!w-min !p-1 "
                                     />
                                 </div>
+
+                                <Modal 
+                                    form_type={FormType::Post} 
+                                    on_submit={handle_submit.clone()} 
+                                />
                             </div>
 
-                            // pub struct PostStruct {
-                            //     pub body: String,
-                            //     pub created_at: String,
-                            //     pub embed_id: Option<i64>,
-                            //     pub header: String,
-                            //     pub post_id: i64,
-                            //     pub poster_id: i64,
-                            //     pub subicron_id: i64,
-                            //     pub poster_username: String,
-                            //     pub upvotes: i64
-                            // }
+                            
 
                             {
                                 posts_ref.iter().map(|post| {

@@ -9,3 +9,6 @@ pub mod downvote_req;
 pub mod get_post_req;
 pub mod get_comments_req;
 pub mod post_comment_req;
+pub mod get_file_req;
+pub mod post_file_req;
+pub mod post_post_req;

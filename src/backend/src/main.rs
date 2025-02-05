@@ -50,6 +50,8 @@ async fn main() -> std::io::Result<()> {
             
             .service(routes::auth::auth())
             .service(routes::subicron::subicron())
+
+            .service(routes::files::files())
             
             .service(SwaggerUi::new("/{_:.*}").url("/api-docs/openapi.json", api_docs::ApiDoc::openapi()))
     })

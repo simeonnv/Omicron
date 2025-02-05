@@ -77,11 +77,14 @@ pub fn sidebar(props: &SidebarProps) -> Html {
                     subicrons.iter().map(|subicron| {
                         html!{
                             <div key={subicron.subicron_id.clone()} class="flex flex-row justify-start items-center gap-4">
-                                <Image
-                                    alt={subicron.name.clone()}
-                                    image_id={subicron.image_id}
-                                    class="h-6 w-6 min-h-6 min-w-6"
-                                />
+                                if !subicron.image_id.is_none() {
+                                    <Image
+                                        alt={subicron.name.clone()}
+                                        image_id={subicron.image_id.unwrap_or_default()}
+                                        class="h-6 w-6 min-h-6 min-w-6"
+                                    />
+                                }
+                                
                                 <p class="grow text-xs">{ &subicron.name }</p>
                                 <Button 
                                     class={

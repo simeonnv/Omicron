@@ -21,9 +21,14 @@ pub fn comment(props: &PostPreviewProps) -> Html {
     html! {
         <div class="flex flex-row justify-middle items-center content-center">
             <div class="grow"/>
-            <div class="w-min flex flex-col border-2 rounded-xl border-dashed border-purple-600 hover:border-purple-800 p-8">
+            <div class="w-min flex gap-4 flex-col border-2 rounded-xl border-dashed border-purple-600 hover:border-purple-800 p-8 justify-middle items-center content-center">
                 <p class="text-purple-600 text-2xl">
                     {props.comment.text.clone()}
+                </p>
+                <p class="text-purple-600 text-2xl">
+                    if !props.comment.embed_id.is_none() {
+                        <Image class="!rounded-xl" alt={props.comment.text.clone()} image_id={props.comment.embed_id.unwrap_or_default()} />
+                    }
                 </p>
                 <div class="text-purple-600 text-lg flex flex-row">
                     <p>{props.comment.created_at.clone()}</p>

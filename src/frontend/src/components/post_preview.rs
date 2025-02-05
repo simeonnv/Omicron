@@ -127,7 +127,7 @@ pub fn post_preview(props: &PostPreviewProps) -> Html {
                         <div class="flex-1 w-full h-full rounded-md overflow-hidden">
                             <Image
                                 alt={props.post.header.clone()}
-                                image_id={props.post.embed_id}
+                                image_id={props.post.embed_id.unwrap_or_default()}
                                 class="w-full h-full object-cover !rounded-md border-2"
                             />
                         </div>

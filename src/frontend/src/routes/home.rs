@@ -5,8 +5,8 @@ use crate::components::{mainbody::MainBody, sidebar::Sidebar};
 
 #[function_component(Home)]
 pub fn home() -> Html {
-    let selected_subicron = use_state(|| 1_i64);
-    let post_id = use_state(|| 1_i64);
+    let selected_subicron = use_state(|| 0_i64);
+    let post_id = use_state(|| 0_i64);
 
     html! {
         <div class="flex h-screen flex-row">
