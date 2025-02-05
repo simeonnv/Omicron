@@ -154,11 +154,12 @@ pub fn subicron(props: &SubicronProps) -> Html {
                                         class="!w-min !p-1 "
                                     />
                                 </div>
-
-                                <Modal 
-                                    form_type={FormType::Post} 
-                                    on_submit={handle_submit.clone()} 
-                                />
+                                <div class="flex flex-row lign-middle w-full justify-center items-center">
+                                    <Modal 
+                                        form_type={FormType::Post} 
+                                        on_submit={handle_submit.clone()} 
+                                    />
+                                </div>
                             </div>
 
                             
