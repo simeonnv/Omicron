@@ -67,8 +67,8 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
 
-            .service(routes::debug::health::health)
-            .service(routes::debug::auth_me())
+            // .service(routes::debug::health::health)
+            // .service(routes::debug::auth_me())
             
             .service(routes::auth::auth())
             .service(routes::subicron::subicron())
