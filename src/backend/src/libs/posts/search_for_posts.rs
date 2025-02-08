@@ -15,7 +15,7 @@ pub struct PostsSearchRes {
     pub created_at: NaiveDateTime,
 }
 
-pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<PostsSearchRes>, Error> {
+pub async fn search_for_posts(query: &String, subicron_id: i64, page: u64) -> Result<Vec<PostsSearchRes>, Error> {
 
     let pool = get_db_pool();
 
@@ -34,12 +34,13 @@ pub async fn search_for_posts(query: &String, subicron_id: i64) -> Result<Vec<Po
             Posts.body LIKE ?)
             AND Posts.subicron_id = ?
         ORDER BY created_at DESC
-        LIMIT 10;
+        LIMIT 10 OFFSET ?;
 
     "#)
         .bind(&search_query)
         .bind(&search_query)
         .bind(subicron_id)
+        .bind((page + 1) * 10)
         .fetch_all(pool)
         .await?;
     

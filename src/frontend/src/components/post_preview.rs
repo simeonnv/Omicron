@@ -30,7 +30,7 @@ pub fn post_preview(props: &PostPreviewProps) -> Html {
         let upvotes_ref = upvotes_ref.clone();
         let upvote_button_ref = upvote_button_ref.clone();
 
-        use_effect_with(upvote_button_ref, move |_| {
+        use_effect_with((upvote_button_ref, subicron_id, post_id), move |_| {
             let subicron_id = subicron_id.clone();
             let post_id = post_id.clone();
             let upvotes_ref = upvotes_ref.clone();

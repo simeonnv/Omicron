@@ -11,7 +11,7 @@ struct LoginResponse {
     data: Vec<PostStruct>
 }
 
-pub async fn get_posts_req(search: String, subicron_id: i64) -> Result<Vec<PostStruct>, String> {
+pub async fn get_posts_req(search: String, subicron_id: i64, page: u64) -> Result<Vec<PostStruct>, String> {
 
     console::log_1(&"fetching Posts!".into());
 
@@ -21,6 +21,7 @@ pub async fn get_posts_req(search: String, subicron_id: i64) -> Result<Vec<PostS
     let mut url = Url::parse(&format!("{}/subicron/{}/posts", config::BACKEND_URL, subicron_id))
         .map_err(|e| e.to_string())?;
     url.query_pairs_mut().append_pair("search", &search);
+    url.query_pairs_mut().append_pair("page", &page.to_string());
 
     let response = client
         .get(url)

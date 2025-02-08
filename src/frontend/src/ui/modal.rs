@@ -60,7 +60,7 @@ pub fn blob_image(props: &BlobImageProps) -> Html {
 
     html! {
         if let Some(url) = &*url {
-            <img src={url.clone()} class="max-w-full h-auto rounded-lg mt-2" />
+            <img src={url.clone()} class="max-w-[40%] w-full h-auto rounded-lg mt-2" />
         }
     }
 }

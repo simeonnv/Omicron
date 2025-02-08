@@ -17,7 +17,8 @@ struct Res {
 
 #[derive(Deserialize, ToSchema, IntoParams)]
 struct QueryParams {
-    pub search: Option<String>, // Optional query parameter
+    pub search: Option<String>,
+    pub page: Option<u64>,
 }
 
 
@@ -26,6 +27,7 @@ struct QueryParams {
     path = "/subicron/{subicron_id}/posts",
     params(
         ("search" = String, Query, description = "subicon search"),
+        ("page" = String, Query, description = "page search"),
         ("subicron_id" = String, Path, description = "Unique subicron ID")
     ),
     responses(
@@ -77,12 +79,15 @@ async fn get_subicron_id_posts(
     if let Some(_) = token_data.extensions().get::<AccountData>() {
 
         let search_query = query.search.clone().unwrap_or("".to_string());
-
         let subicron_id = parse_i64(path.to_string(), "invalid subicron")?;
+        let page = match query.page {
+            Some(e) => e,
+            None => 0
+        };
 
         insure_subicron_exists(subicron_id).await?;
 
-        let subicrons = search_for_posts(&search_query, subicron_id).await?;
+        let subicrons = search_for_posts(&search_query, subicron_id, page).await?;
 
         return Ok(HttpResponse::Ok().json(Res {
             status: "Success",

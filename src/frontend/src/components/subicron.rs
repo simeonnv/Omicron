@@ -2,7 +2,7 @@ use web_sys::console;
 use yew::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 
-use crate::{components::post_preview::PostPreview, libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req, post_post_req::post_post_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{input::Input, modal::{FormSubmission, FormType, Modal}, spinner::Spinner}};
+use crate::{components::post_preview::PostPreview, libs::{request::{get_posts_req::get_posts_req, get_subicron_req::get_subicron_req, post_post_req::post_post_req}, structs::{post::PostStruct, subicron::SubicronStruct}}, ui::{button::Button, input::Input, modal::{FormSubmission, FormType, Modal}, spinner::Spinner}};
 
 #[derive(Properties, PartialEq)]
 pub struct SubicronProps {
@@ -17,6 +17,7 @@ pub fn subicron(props: &SubicronProps) -> Html {
     let subicron_ref = use_state(|| None::<SubicronStruct>);
     let posts_ref = use_state(|| Vec::<PostStruct>::new());
     let post_search_query = use_state(|| String::new());
+    let page = use_state(|| 0_u64);
     
     {
         let selected_subicron = props.selected_subicron.clone();
@@ -51,18 +52,20 @@ pub fn subicron(props: &SubicronProps) -> Html {
         let post_search_query = post_search_query.clone();
         let posts_ref = posts_ref.clone();
         let posts_hook = posts_hook.clone();
+        let page = page.clone();
 
         use_effect_with(
-            (*selected_subicron, (*post_search_query).clone(), *posts_hook), move |(selected_subicron, post_search_query, _)| {
+            (*selected_subicron, (*post_search_query).clone(), *posts_hook, *page), move |(selected_subicron, post_search_query, _, page_num)| {
 
                 let selected_subicron = selected_subicron.clone();
                 let post_search_query = post_search_query.clone();
                 let posts_ref = posts_ref.clone();
+                let page_num = page_num.clone();
 
                 spawn_local(async move {
                     console::log_1(&format!("Fetching post for query: {}", post_search_query).into());
                     
-                    match get_posts_req(post_search_query, selected_subicron).await {
+                    match get_posts_req(post_search_query, selected_subicron, page_num).await {
                         Ok(fetched_subicrons) => {
                             console::log_1(&format!("Fetched {} posts", fetched_subicrons.len()).into());
                             posts_ref.set(fetched_subicrons);
@@ -100,6 +103,22 @@ pub fn subicron(props: &SubicronProps) -> Html {
                     });
                 }
             }
+        })
+    };
+
+    let page_down = {
+        let page = page.clone();
+        Callback::from(move |_| {
+            if *page != 0 {
+                page.set(*page - 1);
+            }
+        })
+    };
+
+    let page_up = {
+        let page = page.clone();
+        Callback::from(move |_| {
+            page.set(*page + 1);
         })
     };
 
@@ -155,10 +174,14 @@ pub fn subicron(props: &SubicronProps) -> Html {
                                     />
                                 </div>
                                 <div class="flex flex-row lign-middle w-full justify-center items-center">
+                                    <div class="grow"/>
+                                    <Button on_click={page_down} label="<" class="w-min"/>
                                     <Modal 
                                         form_type={FormType::Post} 
                                         on_submit={handle_submit.clone()} 
                                     />
+                                    <Button on_click={page_up} label=">" class="w-min"/>
+                                    <div class="grow"/>
                                 </div>
                             </div>
 
