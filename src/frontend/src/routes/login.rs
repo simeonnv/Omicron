@@ -68,7 +68,8 @@ pub fn login() -> Html {
 
                     <Input 
                         value={(*input_password).clone()} 
-                        on_change={on_password_change} 
+                        on_change={on_password_change}
+                        is_password=true
                         placeholder="Enter A Password"
                     />
 

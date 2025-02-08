@@ -3,7 +3,7 @@ use reqwest::{Client, Url};
 use serde::{Deserialize, Serialize};
 use web_sys::console;
 
-use crate::{config, libs::structs::post::PostStruct};
+use crate::config;
 
 #[derive(Deserialize, Serialize, Debug)]
 struct PostUpvoteResponse {

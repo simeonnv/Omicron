@@ -10,6 +10,8 @@ pub struct InputProps {
     pub disabled: bool,
     #[prop_or_default]
     pub class: Option<String>,
+    #[prop_or(false)] // Default is false (text input)
+    pub is_password: bool,
 }
 
 #[function_component(Input)]
@@ -24,9 +26,8 @@ pub fn input(props: &InputProps) -> Html {
 
     html! {
         <input
-            type="text"
+            type={if props.is_password { "password" } else { "text" }}
             class={format!("
-
                 transition-all
                 transition-discrete
                 ease-in-out

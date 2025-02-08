@@ -288,7 +288,7 @@ pub fn modal(props: &ModalProps) -> Html {
                                            file:bg-purple-500 file:text-white
                                            hover:file:bg-purple-600"
                                 />
-                                {if let Some(url) = &*preview_url {
+                                {if let Some(_) = &*preview_url {
                                     html! { <BlobImage data={image_data.as_ref().unwrap().clone()} /> }
                                 } else {
                                     html! {}
