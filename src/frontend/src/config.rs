@@ -1,3 +1,3 @@
 
 
-pub const BACKEND_URL: &str = "http://localhost:8443";
+pub const BACKEND_URL: &str = "https://epsilonsv.duckdns.org/:8443";
