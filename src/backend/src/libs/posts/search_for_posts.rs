@@ -40,7 +40,7 @@ pub async fn search_for_posts(query: &String, subicron_id: i64, page: u64) -> Re
         .bind(&search_query)
         .bind(&search_query)
         .bind(subicron_id)
-        .bind((page + 1) * 10)
+        .bind(page * 10)
         .fetch_all(pool)
         .await?;
     
