@@ -1,3 +1,5 @@
+use std::{fs::File, io::BufReader};
+
 use actix_cors::Cors;
 use libs::auth::create_account::create_account;
 use libs::db;
@@ -28,6 +30,26 @@ async fn main() -> std::io::Result<()> {
     
     let _ = create_account(&"admin".to_string(), &"admin".to_string(), "admin", true).await;
 
+    rustls::crypto::aws_lc_rs::default_provider()
+        .install_default()
+        .unwrap();
+
+    let mut certs_file = BufReader::new(File::open(config::CERT_PATH).unwrap());
+    let mut key_file = BufReader::new(File::open(config::KEY_PATH).unwrap());
+
+    let tls_certs = rustls_pemfile::certs(&mut certs_file)
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    let tls_key = rustls_pemfile::pkcs8_private_keys(&mut key_file)
+        .next()
+        .unwrap()
+        .unwrap();
+
+    let tls_config = rustls::ServerConfig::builder()
+        .with_no_client_auth()
+        .with_single_cert(tls_certs, rustls::pki_types::PrivateKeyDer::Pkcs8(tls_key))
+        .unwrap();
+
     HttpServer::new(|| {
 
         let cors = Cors::default()
@@ -55,7 +77,8 @@ async fn main() -> std::io::Result<()> {
             
             .service(SwaggerUi::new("/{_:.*}").url("/api-docs/openapi.json", api_docs::ApiDoc::openapi()))
     })
-    .bind((config::LISTENING_ON, config::PORT))?
+    // .bind((config::LISTENING_ON, config::PORT))?
+    .bind_rustls_0_23((config::LISTENING_ON, config::PORT), tls_config)?
     .run()
     .await
 }
