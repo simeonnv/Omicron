@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     libssl-dev
 
-RUN cargo install trunk
 RUN cargo install trunk wasm-bindgen-cli --version 0.2.100
+RUN cargo install trunk --version 0.21.5
 RUN rustup target add wasm32-unknown-unknown
 
 WORKDIR /app
