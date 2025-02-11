@@ -4,9 +4,9 @@ services:
   frontend:
     build: ./src/frontend
     ports:
-      - "8000:80"
-    # depends_on:
-    #   - backend
+      - "8331:80"
+    depends_on:
+      - backend
     networks:
     - app-network
     deploy:
@@ -15,34 +15,34 @@ services:
           cpus: '0.5'
           memory: 256M
 
-  # backend:
-  #   build: ./src/backend
-  #   ports:
-  #     - "8001:8443"
-  #   depends_on:
-  #     - database
-  #   networks:
-  #     - app-network
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.5'
-  #         memory: 256M
+  backend:
+    build: ./src/backend
+    ports:
+      - "8332:8443"
+    depends_on:
+      - database
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
-  # database:
-  #   image: mariadb:latest
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=root
-  #     - MYSQL_DATABASE=my_database
-  #   volumes:
-  #     - db-data:/var/lib/mysql
-  #   networks:
-  #     - app-network
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.5'
-  #         memory: 256M
+  database:
+    image: mariadb:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=my_database
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
 volumes:
   db-data:
