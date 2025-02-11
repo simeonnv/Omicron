@@ -4,7 +4,7 @@ services:
   frontend:
     build: ./src/frontend
     ports:
-      - "80:80"
+      - "8331:80"
     depends_on:
       - backend
     networks:
