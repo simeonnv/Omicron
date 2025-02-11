@@ -17,7 +17,9 @@ RUN rustup target add wasm32-unknown-unknown
 WORKDIR /app
 
 COPY . .
-# RUN trunk build --release --skip-version-check
+RUN trunk build --release --skip-version-check
 
 # Serve stage
-CMD trunk serve --skip-version-check
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
