@@ -1,25 +1,19 @@
+FROM rust:slim-bookworm
 
-
-# Build stage
-FROM rust:1.83 AS builder
-
-RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
-    pkg-config \
-    libssl-dev
-
-RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-RUN cargo install wasm-bindgen-cli --version 0.2.100
-RUN cargo binstall trunk --version 0.21.5
+# Add wasm target
 RUN rustup target add wasm32-unknown-unknown
 
-WORKDIR /app
+# Install wasm-pack for testing
+RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-COPY . .
-RUN trunk build --release --skip-version-check
+# Install trunk
+ADD https://github.com/thedodd/trunk/releases/download/v0.17.2/trunk-x86_64-unknown-linux-gnu.tar.gz ./tmp
+RUN cd /tmp && tar xf trunk-x86_64-unknown-linux-gnu.tar.gz && chmod +x trunk && mv trunk /bin
 
-# Serve stage
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /usr/src/app
+COPY ./crates/conduit-wasm .
+COPY .env.example .env
+
+EXPOSE 8080
+
+CMD [ "trunk", "serve" ]
