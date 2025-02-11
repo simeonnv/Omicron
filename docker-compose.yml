@@ -8,7 +8,9 @@ services:
     depends_on:
       - backend
     environment:
-      - BACKEND_URL=http://backend:8443  # Use service name instead of localhost
+      - BACKEND_URL=http://backend:8443
+    networks:
+    - app-network
 
   backend:
     build: ./src/backend
@@ -16,6 +18,8 @@ services:
       - "8001:8443"
     depends_on:
       - database
+    networks:
+      - app-network
 
   database:
     image: mariadb:latest
@@ -23,7 +27,13 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=my_database
     volumes:
-      - db-data:/var/lib/mysql  # Use standard MariaDB data directory
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
 
 volumes:
   db-data:
+
+networks:
+  app-network:
+    driver: bridge
