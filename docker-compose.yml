@@ -11,6 +11,11 @@ services:
       - BACKEND_URL=http://backend:8443
     networks:
     - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
   backend:
     build: ./src/backend
@@ -20,6 +25,11 @@ services:
       - database
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
   database:
     image: mariadb:latest
@@ -30,6 +40,11 @@ services:
       - db-data:/var/lib/mysql
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
 volumes:
   db-data:
