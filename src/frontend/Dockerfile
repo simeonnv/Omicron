@@ -17,7 +17,7 @@ RUN rustup target add wasm32-unknown-unknown
 WORKDIR /app
 
 COPY . .
-RUN trunk build --release --skip-version-check
+# RUN trunk build --release --skip-version-check
 
 # Serve stage
-CMD ["trunk", "serve", "--port", "80", "--skip-version-check"]
+CMD trunk serve
