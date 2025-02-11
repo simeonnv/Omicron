@@ -20,4 +20,4 @@ COPY . .
 # RUN trunk build --release --skip-version-check
 
 # Serve stage
-CMD trunk serve
+CMD trunk serve --skip-version-check
