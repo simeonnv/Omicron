@@ -8,7 +8,7 @@ services:
     depends_on:
       - backend
     networks:
-    - app-network
+      - app-network
 
   backend:
     build: ./src/backend
@@ -18,18 +18,20 @@ services:
       - database
     networks:
       - app-network
+
   database:
     image: mariadb:latest
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=my_database
     volumes:
-      - db-data:/var/lib/mysql
+      - omicron:/var/lib/mysql  
     networks:
       - app-network
-  
+
 volumes:
-  db-data:
+  omicron: 
+    external: true 
 
 networks:
   app-network:
