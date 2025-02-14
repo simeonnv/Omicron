@@ -1,25 +1,25 @@
 version: "3.8"
 
 services:
-  frontend:
+  omicron_frontend:
     build: ./src/frontend
     ports:
       - "7000:7000"
     depends_on:
-      - backend
+      - omicron_backend
     networks:
       - main
 
-  backend:
+  omicron_backend:
     build: ./src/backend
     ports:
       - "6000:6000"
     depends_on:
-      - database
+      - omicron_database
     networks:
       - main
 
-  database:
+  omicron_database:
     image: mariadb:latest
     environment:
       - MYSQL_ROOT_PASSWORD=root
