@@ -8,6 +8,6 @@ COPY . .
 
 RUN cargo build
 
-EXPOSE 8443
+EXPOSE 6000
 
 CMD ["cargo", "run"]

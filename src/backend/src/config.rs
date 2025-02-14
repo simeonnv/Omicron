@@ -1,6 +1,6 @@
 use argon2::Params;
 
-pub const PORT: u16 = 8443;
+pub const PORT: u16 = 6000;
 pub const LISTENING_ON: &str = "0.0.0.0";
 
 pub const DB_PORT: u16 = 3306;

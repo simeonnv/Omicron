@@ -14,7 +14,7 @@ RUN cargo install wasm-bindgen-cli --version 0.2.100
 RUN cargo binstall trunk --version 0.21.5
 RUN rustup target add wasm32-unknown-unknown
 
-EXPOSE 80
+EXPOSE 7000
 
 WORKDIR /app
 
