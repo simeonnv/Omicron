@@ -4,7 +4,7 @@ pub const PORT: u16 = 6000;
 pub const LISTENING_ON: &str = "0.0.0.0";
 
 pub const DB_PORT: u16 = 3306;
-pub const DB_ADDRESS: &str = "database";
+pub const DB_ADDRESS: &str = "omicron_database";
 pub const DB_NAME: &str = "my_database";
 pub const DB_USERNAME: &str = "root";
 pub const DB_PASSWORD: &str = "root";
