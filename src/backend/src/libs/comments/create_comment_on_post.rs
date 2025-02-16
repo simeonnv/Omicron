@@ -18,7 +18,7 @@ pub async fn create_comment_on_post(post_id: i64, account_id: i64, text: String,
 
     sqlx::query(r#"
 
-        INSERT INTO Omicron.Comments
+        INSERT INTO Comments
             (`text`, embed_id, commenter_id, post_id)
         VALUES(?, ?, ?, ?);
 
