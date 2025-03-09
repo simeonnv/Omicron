@@ -1,5 +1,5 @@
 # Omicron
- Chatroom written in rust
+ REddit clone written in rust
 
 ## Compilation and exacution
 
