@@ -1,5 +1,5 @@
 # Omicron
- REddit clone written in rust
+ Reddit clone written in rust
 
 ## Compilation and exacution
 
